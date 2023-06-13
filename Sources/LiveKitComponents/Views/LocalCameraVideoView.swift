@@ -19,6 +19,8 @@ import LiveKit
 
 public struct LocalCameraVideoView: View {
 
+    @EnvironmentObject var ui: UIPreference
+
     let localVideoTrack: LocalVideoTrack
 
     public init(localVideoTrack: LocalVideoTrack? = nil) {
@@ -26,17 +28,24 @@ public struct LocalCameraVideoView: View {
     }
 
     public var body: some View {
-        SwiftUIVideoView(localVideoTrack,
-                         mirrorMode: .mirror)
-            .onAppear {
-                Task {
-                    try await localVideoTrack.start()
-                }
+        GeometryReader { geometry in
+
+            ZStack {
+                ui.videoDisabledView(geometry: geometry)
+
+                SwiftUIVideoView(localVideoTrack,
+                                 mirrorMode: .mirror)
+                    .onAppear {
+                        Task {
+                            try await localVideoTrack.start()
+                        }
+                    }
+                    .onDisappear {
+                        Task {
+                            try await localVideoTrack.stop()
+                        }
+                    }
             }
-            .onDisappear {
-                Task {
-                    try await localVideoTrack.stop()
-                }
-            }
+        }
     }
 }

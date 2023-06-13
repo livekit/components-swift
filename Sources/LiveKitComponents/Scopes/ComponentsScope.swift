@@ -22,8 +22,8 @@ public struct ComponentsScope<Content: View>: View {
     var content: () -> Content
     let preference: UIPreference
 
-    init(configuration: UIPreference? = nil,
-         @ViewBuilder _ content: @escaping () -> Content) {
+    public init(configuration: UIPreference? = nil,
+                @ViewBuilder _ content: @escaping () -> Content) {
 
         self.preference = configuration ?? UIPreference()
         self.content = content
