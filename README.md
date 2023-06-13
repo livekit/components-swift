@@ -1,2 +1,3 @@
-# client-components-swift
- 
+# LiveKitComponents
+
+A description of this package.
