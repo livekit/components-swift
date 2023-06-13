@@ -1,6 +1,0 @@
-public struct LiveKitComponents {
-    public private(set) var text = "Hello, World!"
-
-    public init() {
-    }
-}
