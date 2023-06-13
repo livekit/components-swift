@@ -94,13 +94,12 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
                 spacing: computedSpacing) {
                 ForEach(data.indices, id: \.self) { index in
                     viewBuilder(data[index])
-                       .frame(minHeight: 180)
+                        .frame(minHeight: 180)
                 }
             }
         }
         // ContentView()
     }
-
 
     struct ContentView: View {
         let numOfItems = 10
@@ -114,7 +113,7 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
                 let height: CGFloat = (g.size.height - (spacing * CGFloat(numOfRows - 1))) / CGFloat(numOfRows)
 
                 LazyVGrid(columns: columns, alignment: .leading, spacing: spacing) {
-                    ForEach(0..<numOfItems, id: \.self) { object in
+                    ForEach(0..<numOfItems, id: \.self) { _ in
                         MyView().frame(minHeight: height, maxHeight: .infinity)
                     }
                 }

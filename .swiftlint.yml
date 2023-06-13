@@ -1,5 +1,6 @@
 included:
   - Sources
+  - Package.swift
 
 disabled_rules:
   - line_length
