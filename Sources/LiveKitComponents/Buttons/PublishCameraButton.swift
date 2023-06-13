@@ -39,7 +39,7 @@ public struct PublishCameraButton<Label: View, PublishedLabel: View>: View {
         Button {
             Task {
                 isBusy = true
-                defer { isBusy = false }
+                defer { Task { @MainActor in isBusy = false } }
                 guard let localParticipant = room.localParticipant else { return }
                 try await localParticipant.setCamera(enabled: !isCameraEnabled)
             }

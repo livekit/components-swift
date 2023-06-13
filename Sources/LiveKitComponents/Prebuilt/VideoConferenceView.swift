@@ -38,7 +38,6 @@ public struct VideoConferenceView: View {
         .toolbar {
             ToolbarItemGroup(placement: .automatic) {
                 RoomNameView()
-                    .fontWeight(.bold)
 
                 ParticipantCountView()
 

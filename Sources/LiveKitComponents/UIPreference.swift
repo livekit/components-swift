@@ -84,7 +84,7 @@ open class UIPreference: ObservableObject {
     func textFieldContainer(_ childView: () -> some View, label: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: 10.0) {
             label()
-                .fontWeight(.bold)
+
             childView()
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10.0)

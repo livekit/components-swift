@@ -19,7 +19,6 @@ import LiveKit
 
 // Scope for Components framework
 struct LiveKitComponents {
-    @objc(sdkVersion)
     public static let version = "0.0.1"
 }
 
