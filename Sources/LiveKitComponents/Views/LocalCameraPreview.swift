@@ -17,7 +17,7 @@
 import SwiftUI
 import LiveKit
 
-public struct LocalCameraVideoView: View {
+public struct LocalCameraPreview: View {
 
     @EnvironmentObject var ui: UIPreference
 
@@ -28,6 +28,7 @@ public struct LocalCameraVideoView: View {
     }
 
     public var body: some View {
+
         GeometryReader { geometry in
 
             ZStack {

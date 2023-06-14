@@ -35,7 +35,7 @@ open class UIPreference: ObservableObject {
     var participantViewSpacing: CGFloat { 8 }
 
     /// Placeholder view when the video is disabled or not available.
-    func videoDisabledView(geometry: GeometryProxy) -> some View {
+    public func videoDisabledView(geometry: GeometryProxy) -> some View {
         Image(systemName: "video.slash")
             .resizable()
             .aspectRatio(contentMode: .fit)
