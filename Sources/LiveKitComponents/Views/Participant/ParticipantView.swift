@@ -22,6 +22,10 @@ public struct ParticipantView: View {
     @EnvironmentObject var participant: Participant
     @EnvironmentObject var ui: UIPreference
 
+    public init() {
+
+    }
+
     public var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
