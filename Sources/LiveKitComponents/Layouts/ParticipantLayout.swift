@@ -38,91 +38,39 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
         self.spacing = spacing
     }
 
-    func buildGrid(for range: ClosedRange<Int>, axis: Axis, geometry: GeometryProxy) -> some View {
-        ScrollView([ axis == .vertical ? .vertical : .horizontal ]) {
-            HorVGrid(axis: axis, spacing: computedSpacing) {
-                ForEach(range, id: \.self) { i in
-                    viewBuilder(data(at: i))
-                        .aspectRatio(1, contentMode: .fill)
-                }
-            }
-            //            .padding(axis == .horizontal ? [.leading, .trailing] : [.top, .bottom],
-            //                     max(0, ((axis == .horizontal ? geometry.size.width : geometry.size.height)
-            //                                - ((axis == .horizontal ? geometry.size.height : geometry.size.width) * CGFloat(range.count)) - (computedSpacing * CGFloat(range.count - 1))) / 2))
-        }
+    private func computeColumn() -> (columns: [Int], rows: Int) {
+        let baseCount = Int(ceil(Double(data.count).squareRoot()))
+        let remainder = data.count % baseCount
+        let firstRowCount = remainder > 0 ? remainder : baseCount
+        let rows = remainder > 0 ? baseCount : baseCount
+
+        var columns = [Int]()
+        columns.append(firstRowCount)
+        columns.append(contentsOf: Array(repeating: baseCount, count: rows - 1))
+        return (columns: columns, rows: rows)
     }
-
-    //    func computeColumn(with geometry: GeometryProxy) -> (columns: Int, rows: Int) {
-    //        let sqr = Double(data.count).squareRoot()
-    //        let r: [Int] = [Int(sqr.rounded()), Int(sqr.rounded(.up))]
-    //        let c = geometry.isTall ? r : r.reversed()
-    //        return (columns: c[0], rows: c[1])
-    //    }
-    //
-    //    var body: some View {
-    //        GeometryReader { geometry in
-    //
-    //            let computeResult = computeColumn(with: geometry)
-    //            VStack(spacing: computedSpacing) {
-    //                ForEach(0...(computeResult.rows - 1), id: \.self) { y in
-    //                    HStack(spacing: computedSpacing) {
-    //                        ForEach(0...(computeResult.columns - 1), id: \.self) { x in
-    //                            let index = (y * computeResult.columns) + x
-    //                            if index < data.count {
-    //                                viewBuilder(data(at: index))
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //
-    //            }
-    //        }
-    //    }
-
-    //    func createLayout(with geometry: GeometryProxy) -> [GridItem] {
-    //        let availableWidth = geometry.size.width
-    //        let numberOfColumns = max(Int(availableWidth / 200), 1)
-    //        return Array(repeating: .init(.flexible()), count: numberOfColumns)
-    //    }
-
-    private var computedSpacing: CGFloat { 10 }
 
     var body: some View {
-        ScrollView(showsIndicators: true) {
-            LazyVGrid(
-                columns: [GridItem(.adaptive(minimum: 180, maximum: 400))],
-                spacing: computedSpacing) {
-                ForEach(data.indices, id: \.self) { index in
-                    viewBuilder(data[index])
-                        .frame(minHeight: 180)
-                }
-            }
-        }
-        // ContentView()
-    }
-
-    struct ContentView: View {
-        let numOfItems = 10
-        let numOfColumns = 3
-        let spacing: CGFloat = 10
-
-        var body: some View {
-            GeometryReader { g in
-                let columns = Array(repeating: GridItem(.flexible(minimum: 50, maximum: 100)), count: numOfColumns)
-                let numOfRows: Int = Int(ceil(Double(numOfItems) / Double(numOfColumns)))
-                let height: CGFloat = (g.size.height - (spacing * CGFloat(numOfRows - 1))) / CGFloat(numOfRows)
-
-                LazyVGrid(columns: columns, alignment: .leading, spacing: spacing) {
-                    ForEach(0..<numOfItems, id: \.self) { _ in
-                        MyView().frame(minHeight: height, maxHeight: .infinity)
+        if data.count > 0 {
+            GeometryReader { _ in
+                let computed = computeColumn()
+                VStack(spacing: spacing) {
+                    ForEach(0..<computed.rows, id: \.self) { row in
+                        HStack(spacing: spacing) {
+                            ForEach(0..<computed.columns[row], id: \.self) { column in
+                                let index = computed.columns.prefix(row).reduce(0, +) + column
+                                if index < data.count {
+                                    ZStack(alignment: .center) {
+                                        Color.white
+                                        Text("\(index)")
+                                            .foregroundColor(Color.black)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }}
-
-    struct MyView: View {
-        var body: some View {
-            Color(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1))
         }
     }
 }
