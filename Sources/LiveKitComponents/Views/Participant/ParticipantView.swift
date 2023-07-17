@@ -22,8 +22,10 @@ public struct ParticipantView: View {
     @EnvironmentObject var participant: Participant
     @EnvironmentObject var ui: UIPreference
 
-    public init() {
+    let showInformation: Bool
 
+    public init(showInformation: Bool = true) {
+        self.showInformation = showInformation
     }
 
     public var body: some View {
@@ -35,11 +37,13 @@ public struct ParticipantView: View {
                 } else {
                     ui.videoDisabledView(geometry: geometry)
                 }
-                ParticipantInformationView()
-                    .padding(5)
-                    .background(Color.black.opacity(0.5))
-                    .cornerRadius(7)
-                    .padding()
+                if showInformation {
+                    ParticipantInformationView()
+                        .padding(5)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(7)
+                        .padding()
+                }
             }
         }
     }
