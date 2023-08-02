@@ -16,21 +16,21 @@
 
 import SwiftUI
 
-struct HorVGrid<Content: View>: View {
+public struct HorVGrid<Content: View>: View {
     let axis: Axis
     let spacing: CGFloat?
     let content: () -> Content
 
-    init(axis: Axis = .horizontal,
-         spacing: CGFloat? = nil,
-         @ViewBuilder content: @escaping () -> Content) {
+    public init(axis: Axis = .horizontal,
+                spacing: CGFloat? = nil,
+                @ViewBuilder content: @escaping () -> Content) {
 
         self.axis = axis
         self.spacing = spacing
         self.content = content
     }
 
-    var body: some View {
+    public var body: some View {
         Group {
 
             if #available(macOS 11.0, *) {
