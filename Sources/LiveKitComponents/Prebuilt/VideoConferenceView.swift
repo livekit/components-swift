@@ -20,6 +20,10 @@ public struct VideoConferenceView: View {
 
     @EnvironmentObject var ui: UIPreference
 
+    public init() {
+
+    }
+
     func buildNotConnectedView() -> some View {
         ConnectView()
             .frame(maxWidth: 300)
