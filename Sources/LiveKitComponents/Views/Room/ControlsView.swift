@@ -22,19 +22,19 @@ public struct ControlsView: View {
 
     public var body: some View {
 
-        PublishCameraButton {
+        CameraToggleButton {
             ui.enableVideoView()
         } published: {
             ui.disableVideoView()
         }
 
-        PublishMicrophoneButton {
+        MicrophoneToggleButton {
             ui.enableMicrophoneView()
         } published: {
             ui.disableMicrophoneView()
         }
 
-        RoomDisconnectButton {
+        DisconnectRoomButton {
             ui.disconnectView()
         }
     }

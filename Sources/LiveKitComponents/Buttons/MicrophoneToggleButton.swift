@@ -17,9 +17,10 @@
 import SwiftUI
 import LiveKit
 
-public struct PublishCameraButton<Label: View, PublishedLabel: View>: View {
+public struct MicrophoneToggleButton<Label: View, PublishedLabel: View>: View {
 
     @EnvironmentObject var room: Room
+
     @State var isBusy = false
 
     let label: ComponentBuilder<Label>
@@ -31,8 +32,8 @@ public struct PublishCameraButton<Label: View, PublishedLabel: View>: View {
         self.publishedLabel = published
     }
 
-    var isCameraEnabled: Bool {
-        room.localParticipant?.isCameraEnabled() ?? false
+    var isMicrophoneEnabled: Bool {
+        room.localParticipant?.isMicrophoneEnabled() ?? false
     }
 
     public var body: some View {
@@ -41,10 +42,10 @@ public struct PublishCameraButton<Label: View, PublishedLabel: View>: View {
                 isBusy = true
                 defer { Task { @MainActor in isBusy = false } }
                 guard let localParticipant = room.localParticipant else { return }
-                try await localParticipant.setCamera(enabled: !isCameraEnabled)
+                try await localParticipant.setMicrophone(enabled: !isMicrophoneEnabled)
             }
         } label: {
-            if isCameraEnabled {
+            if isMicrophoneEnabled {
                 publishedLabel()
             } else {
                 label()

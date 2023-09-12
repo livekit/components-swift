@@ -17,7 +17,7 @@
 import SwiftUI
 import LiveKit
 
-public struct RoomDisconnectButton<Label: View>: View {
+public struct DisconnectRoomButton<Label: View>: View {
 
     @EnvironmentObject var room: Room
 
