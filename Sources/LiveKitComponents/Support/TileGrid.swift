@@ -16,7 +16,7 @@
 
 import SwiftUI
 
-struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable, Data.Index: Hashable {
+public struct TileGrid<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable, Data.Index: Hashable {
 
     private let data: Data
     private let spacing: CGFloat?
@@ -48,13 +48,13 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
         return (columns: columns, rows: rows)
     }
 
-    var body: some View {
+    public var body: some View {
         if data.count > 0 {
             GeometryReader { _ in
                 let computed = computeColumn()
-                HStack(spacing: spacing) {
+                VStack(spacing: spacing) {
                     ForEach(0..<computed.rows, id: \.self) { row in
-                        VStack(spacing: spacing) {
+                        HStack(spacing: spacing) {
                             ForEach(0..<computed.columns[row], id: \.self) { column in
                                 let index = computed.columns.prefix(row).reduce(0, +) + column
                                 if index < data.count {

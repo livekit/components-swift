@@ -17,6 +17,16 @@
 import SwiftUI
 import LiveKit
 
+public typealias ParticipantFilterFunc = (Participant) -> Bool
+
+public enum ParticipantFilter {
+    case all
+    case remoteParticipants
+    case canPublishMedia
+    case publishingVideo
+    case custom(ParticipantFilterFunc)
+}
+
 /// Loops through `Participant`'s in the current `Room`.
 ///
 /// > Note: References `Room` environment object.
@@ -24,35 +34,44 @@ public struct ForEachParticipant<Content: View>: View {
 
     @EnvironmentObject var room: Room
 
-    public enum Filter {
-        case all
-        /// Only participants that have publish permission
-        case canPublishVideoOrAudio
-        case isPublishingVideo
-        case isPublishingAudio
-    }
-
-    /// Whether to include the local participant in the enumeration
-    let includeLocalParticipant: Bool
-    let filterMode: Filter
+    let filter: ParticipantFilter
     let content: ParticipantComponentBuilder<Content>
 
     public init(includeLocalParticipant: Bool = true,
-                filter: Filter = .all,
+                filter: ParticipantFilter = .all,
                 @ViewBuilder content: @escaping ParticipantComponentBuilder<Content>) {
 
-        self.includeLocalParticipant = includeLocalParticipant
-        self.filterMode = filter
+        self.filter = filter
         self.content = content
     }
 
     private func sortedParticipants() -> [Participant] {
 
-        // Include LocalParticipant or not
         let participants: [Participant] = Array(room.allParticipants.values).filter { participant in
-            // Filter out LocalParticipant if not required
-            if !includeLocalParticipant, participant is LocalParticipant { return false }
-            if case .canPublishVideoOrAudio = filterMode, !participant.permissions.canPublish { return false }
+
+            //            for case .localParticipant(let include) in filter {
+            //                if participant is LocalParticipant {
+            //                    if !include { return false }
+            //                }
+            //            }
+
+            if case .all = filter {
+                // Include all participants
+                return true
+            } else if case .canPublishMedia = filter {
+                //
+                return participant.permissions.canPublish
+            }
+
+            //            for case .canPublishData(let include) in filter {
+            //                if participant.permissions.canPublishData { return include }
+            //            }
+
+            //            for case .publishingVideo(let include) in filter {
+            //                let enabledTrack = participant.videoTracks.first(where: { !$0.muted })
+            //                if !(enabledTrack != nil && include) { return false }
+            //            }
+
             return true
         }
 
