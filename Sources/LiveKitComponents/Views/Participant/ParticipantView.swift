@@ -37,6 +37,11 @@ public struct ParticipantView: View {
                 } else {
                     ui.videoDisabledView(geometry: geometry)
                 }
+                if participant is RemoteParticipant,
+                   let trackPublication = participant.firstAudioPublication {
+                    AudioTrackPublicationVisualizer()
+                        .environmentObject(trackPublication)
+                }
                 if showInformation {
                     ParticipantInformationView()
                         .padding(5)
