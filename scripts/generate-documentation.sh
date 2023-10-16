@@ -18,4 +18,4 @@ find .temp/docbuild-output               \
 $(xcrun --find docc) process-archive \
 transform-for-static-hosting .temp/doccarchives/LiveKitComponents.doccarchive \
 --output-path ./docs \
---hosting-base-path LiveKitComponents
+--hosting-base-path components-swift
