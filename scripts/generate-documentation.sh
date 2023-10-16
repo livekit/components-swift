@@ -14,8 +14,3 @@ find .temp/docbuild-output               \
   -name "*.doccarchive"              \
   -exec cp -R {} .temp/doccarchives \;
 
-# Generate the static documentation site from the doccarchive.
-$(xcrun --find docc) process-archive \
-transform-for-static-hosting .temp/doccarchives/LiveKitComponents.doccarchive \
---output-path ./docs \
---hosting-base-path components-swift
