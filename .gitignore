@@ -12,3 +12,4 @@ Documentation
 *.doccarchive
 # Local WebRTC
 WebRTC.xcframework
+.temp
