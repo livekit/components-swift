@@ -34,7 +34,7 @@ jobs:
             transform-for-static-hosting /tmp/docbuild/Build/Products/Debug-iphoneos/LiveKitComponents.doccarchive \
             --hosting-base-path /components-swift \
             --output-path docs;
-          echo "<script>window.location.href += \"/documentation/components-swift\"</script>" > docs/index.html;
+          echo "<script>window.location.href += \"documentation/livekitcomponents\"</script>" > docs/index.html;
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
