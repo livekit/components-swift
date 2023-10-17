@@ -1,5 +1,5 @@
 # Name your workflow.
-name: Generate and deploy docs to GitHub Pages
+name: Generate docs and deploy to GitHub Pages
 on:
   # Runs on pushes targeting the default branch
   push:
