@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 mkdir -p .temp/docbuild-output
 mkdir -p .temp/doccarchives
@@ -16,4 +16,4 @@ find .temp/docbuild-output               \
 
 
 
-# swift package --allow-writing-to-directory docs generate-documentation --output-path docs --transform-for-static-hosting --hosting-base-path /components-swift
+# swift package --allow-writing-to-directory ./docs generate-documentation --target 'LiveKitComponents' --disable-indexing --transform-for-static-hosting --hosting-base-path components-swift --output-path ./docs
