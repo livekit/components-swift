@@ -1,10 +1,8 @@
-# Name your workflow.
 name: Generate docs and deploy to GitHub Pages
 on:
   # Runs on pushes targeting the default branch
-  # TODO: Change this to the branch you want to deploy from
   push:
-    branches: ["docs-gen-with-docc"]
+    branches: ["main"]
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
