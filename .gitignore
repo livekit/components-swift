@@ -10,5 +10,7 @@ Documentation
 # DocC
 /build_docs/
 *.doccarchive
+!/docs/**
 # Local WebRTC
 WebRTC.xcframework
+.temp
