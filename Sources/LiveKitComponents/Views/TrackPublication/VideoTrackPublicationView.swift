@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct VideoTrackPublicationView: View {
-
     @EnvironmentObject var trackPublication: TrackPublication
     @EnvironmentObject var ui: UIPreference
 
@@ -30,15 +29,15 @@ public struct VideoTrackPublicationView: View {
 
                 if let track = trackPublication.track as? VideoTrack,
                    trackPublication.subscribed,
-                   !trackPublication.muted {
-
+                   !trackPublication.muted
+                {
                     SwiftUIVideoView(track
-                                     //                                 layoutMode: appCtx.videoViewMode,
-                                     //                                 mirrorMode: appCtx.videoViewMirrored ? .mirror : .auto,
-                                     //                                 debugMode: false, // appCtx.showInformationOverlay,
-                                     //                                 isRendering: $isRendering,
-                                     //                                 dimensions: $dimensions,
-                                     //                                 trackStats: $videoTrackStats
+                        //                                 layoutMode: appCtx.videoViewMode,
+                        //                                 mirrorMode: appCtx.videoViewMirrored ? .mirror : .auto,
+                        //                                 debugMode: false, // appCtx.showInformationOverlay,
+                        //                                 isRendering: $isRendering,
+                        //                                 dimensions: $dimensions,
+                        //                                 trackStats: $videoTrackStats
                     )
                 }
             }

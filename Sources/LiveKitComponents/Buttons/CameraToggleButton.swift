@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// The Camera Toggle Button is a button that toggles the camera on and off.
 public struct CameraToggleButton<Label: View, PublishedLabel: View>: View {
-
     @EnvironmentObject var room: Room
     @State var isBusy = false
 
@@ -27,9 +26,8 @@ public struct CameraToggleButton<Label: View, PublishedLabel: View>: View {
     let publishedLabel: ComponentBuilder<PublishedLabel>
 
     public init(@ViewBuilder label: @escaping ComponentBuilder<Label>, @ViewBuilder published: @escaping ComponentBuilder<PublishedLabel>) {
-
         self.label = label
-        self.publishedLabel = published
+        publishedLabel = published
     }
 
     var isCameraEnabled: Bool {

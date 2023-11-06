@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// Subclass to customize default components UI.
 open class UIPreference: ObservableObject {
-
     enum TextFieldType {
         case url
         case token
@@ -88,19 +87,19 @@ open class UIPreference: ObservableObject {
             childView()
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10.0)
-                            .strokeBorder(Color.white.opacity(0.3),
-                                          style: StrokeStyle(lineWidth: 1.0)))
+                    .strokeBorder(Color.white.opacity(0.3),
+                                  style: StrokeStyle(lineWidth: 1.0)))
         }
     }
 
-    func textField(for text: Binding<String>, type: TextFieldType) -> some View {
+    func textField(for text: Binding<String>, type _: TextFieldType) -> some View {
         TextField("", text: text)
             .textFieldStyle(PlainTextFieldStyle())
             .disableAutocorrection(true)
         // TODO: add iOS unique view modifiers
         #if os(iOS)
-        .autocapitalization(.none)
-        // .keyboardType(type.toiOSType())
+            .autocapitalization(.none)
+            // .keyboardType(type.toiOSType())
         #endif
     }
 
@@ -109,7 +108,6 @@ open class UIPreference: ObservableObject {
     }
 
     func connectionQualityIndicatorBuilder(connectionQuality: ConnectionQuality) -> some View {
-
         if connectionQuality == .excellent {
             return Image(systemName: "wifi")
                 .foregroundColor(.green)

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// Switch the view to build depending on the `Room`'s `ConnectionState`.
 ///
 /// > Note: References `Room` environment object.
 public struct ConnectionStateBuilder<DisconnectedView: View,
-                                     ConnectingView: View,
-                                     ReconnectingView: View,
-                                     ConnectedView: View>: View {
-
+    ConnectingView: View,
+    ReconnectingView: View,
+    ConnectedView: View>: View
+{
     public typealias DisconnectedComponentBuilder<Content: View> = (_ reason: DisconnectReason?) -> Content
 
     @EnvironmentObject var room: Room
@@ -35,10 +35,10 @@ public struct ConnectionStateBuilder<DisconnectedView: View,
     var connected: ComponentBuilder<ConnectedView>
 
     public init(@ViewBuilder disconnected: @escaping DisconnectedComponentBuilder<DisconnectedView>,
-                             @ViewBuilder connecting: @escaping ComponentBuilder<ConnectingView>,
-                             @ViewBuilder reconnecting: @escaping ComponentBuilder<ReconnectingView>,
-                             @ViewBuilder connected: @escaping ComponentBuilder<ConnectedView>) {
-
+                @ViewBuilder connecting: @escaping ComponentBuilder<ConnectingView>,
+                @ViewBuilder reconnecting: @escaping ComponentBuilder<ReconnectingView>,
+                @ViewBuilder connected: @escaping ComponentBuilder<ConnectedView>)
+    {
         self.disconnected = disconnected
         self.connecting = connecting
         self.reconnecting = reconnecting
@@ -47,7 +47,7 @@ public struct ConnectionStateBuilder<DisconnectedView: View,
 
     public var body: some View {
         switch room.connectionState {
-        case .disconnected(let reason): return AnyView(disconnected(reason))
+        case let .disconnected(reason): return AnyView(disconnected(reason))
         case .connecting: return AnyView(connecting())
         case .reconnecting: return AnyView(reconnecting())
         case .connected: return AnyView(connected())

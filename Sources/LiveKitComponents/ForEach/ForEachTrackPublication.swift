@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// Loops through `TrackPublications`'s in the current `Participant`.
 ///
@@ -24,7 +24,6 @@ import LiveKit
 ///
 /// > Note: References `Participant` environment object.
 public struct ForEachTrackPublication<Content: View>: View {
-
     public enum Filter {
         case all
         case video
@@ -37,8 +36,8 @@ public struct ForEachTrackPublication<Content: View>: View {
     let content: TrackPublicationComponentBuilder<Content>
 
     public init(filter: Filter = .video,
-                @ViewBuilder content: @escaping TrackPublicationComponentBuilder<Content>) {
-
+                @ViewBuilder content: @escaping TrackPublicationComponentBuilder<Content>)
+    {
         self.filter = filter
         self.content = content
     }

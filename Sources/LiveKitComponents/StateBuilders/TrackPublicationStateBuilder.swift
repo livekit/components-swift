@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct TrackPublicationStateBuilder<OnView: View,
-                                           OffView: View>: View {
-
+    OffView: View>: View
+{
     @EnvironmentObject var trackPublication: TrackPublication
 
     var onBuilder: ComponentBuilder<OnView>
     var offBuilder: ComponentBuilder<OffView>
 
     public init(@ViewBuilder on: @escaping ComponentBuilder<OnView>,
-                             @ViewBuilder off: @escaping ComponentBuilder<OffView>) {
-
-        self.onBuilder = on
-        self.offBuilder = off
+                @ViewBuilder off: @escaping ComponentBuilder<OffView>)
+    {
+        onBuilder = on
+        offBuilder = off
     }
 
     public var body: some View {

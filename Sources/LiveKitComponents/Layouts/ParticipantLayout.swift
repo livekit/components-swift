@@ -17,7 +17,6 @@
 import SwiftUI
 
 struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable, Data.Index: Hashable {
-
     @EnvironmentObject var ui: UIPreference
 
     private let data: Data
@@ -31,10 +30,10 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
 
     public init(_ data: Data,
                 spacing: CGFloat? = nil,
-                content: @escaping (Data.Element) -> Content) {
-
+                content: @escaping (Data.Element) -> Content)
+    {
         self.data = data
-        self.viewBuilder = content
+        viewBuilder = content
         self.spacing = spacing
     }
 
@@ -55,9 +54,9 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
             GeometryReader { _ in
                 let computed = computeColumn()
                 VStack(spacing: spacing) {
-                    ForEach(0..<computed.rows, id: \.self) { row in
+                    ForEach(0 ..< computed.rows, id: \.self) { row in
                         HStack(spacing: spacing) {
-                            ForEach(0..<computed.columns[row], id: \.self) { column in
+                            ForEach(0 ..< computed.columns[row], id: \.self) { column in
                                 let index = computed.columns.prefix(row).reduce(0, +) + column
                                 if index < data.count {
                                     ZStack(alignment: .center) {

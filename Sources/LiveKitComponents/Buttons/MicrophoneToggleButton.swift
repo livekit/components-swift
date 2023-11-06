@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct MicrophoneToggleButton<Label: View, PublishedLabel: View>: View {
-
     @EnvironmentObject var room: Room
 
     @State var isBusy = false
@@ -27,9 +26,8 @@ public struct MicrophoneToggleButton<Label: View, PublishedLabel: View>: View {
     let publishedLabel: ComponentBuilder<PublishedLabel>
 
     public init(@ViewBuilder label: @escaping ComponentBuilder<Label>, @ViewBuilder published: @escaping ComponentBuilder<PublishedLabel>) {
-
         self.label = label
-        self.publishedLabel = published
+        publishedLabel = published
     }
 
     var isMicrophoneEnabled: Bool {

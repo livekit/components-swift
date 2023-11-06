@@ -23,8 +23,8 @@ public struct HorVGrid<Content: View>: View {
 
     public init(axis: Axis = .horizontal,
                 spacing: CGFloat? = nil,
-                @ViewBuilder content: @escaping () -> Content) {
-
+                @ViewBuilder content: @escaping () -> Content)
+    {
         self.axis = axis
         self.spacing = spacing
         self.content = content
@@ -32,7 +32,6 @@ public struct HorVGrid<Content: View>: View {
 
     public var body: some View {
         Group {
-
             if #available(macOS 11.0, *) {
                 if axis == .vertical {
                     LazyVGrid(columns: [GridItem(.flexible())], spacing: spacing, content: content)

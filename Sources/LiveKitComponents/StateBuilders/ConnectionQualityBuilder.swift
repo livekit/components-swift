@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// Switch the view to build, depending on the `Participant`'s `ConnectionQuality`.
 ///
 /// > Note: References `Participant` environment object.
 public struct ConnectionQualityBuilder<UnknownView: View,
-                                       PoorView: View,
-                                       GoodView: View,
-                                       ExcellentView: View>: View {
-
+    PoorView: View,
+    GoodView: View,
+    ExcellentView: View>: View
+{
     @EnvironmentObject var participant: Participant
 
     var unknownBuilder: ComponentBuilder<UnknownView>
@@ -33,14 +33,14 @@ public struct ConnectionQualityBuilder<UnknownView: View,
     var excellentBuilder: ComponentBuilder<ExcellentView>
 
     public init(@ViewBuilder unknown: @escaping ComponentBuilder<UnknownView>,
-                             @ViewBuilder poor: @escaping ComponentBuilder<PoorView>,
-                             @ViewBuilder good: @escaping ComponentBuilder<GoodView>,
-                             @ViewBuilder excellent: @escaping ComponentBuilder<ExcellentView>) {
-
-        self.unknownBuilder = unknown
-        self.poorBuilder = poor
-        self.goodBuilder = good
-        self.excellentBuilder = excellent
+                @ViewBuilder poor: @escaping ComponentBuilder<PoorView>,
+                @ViewBuilder good: @escaping ComponentBuilder<GoodView>,
+                @ViewBuilder excellent: @escaping ComponentBuilder<ExcellentView>)
+    {
+        unknownBuilder = unknown
+        poorBuilder = poor
+        goodBuilder = good
+        excellentBuilder = excellent
     }
 
     public var body: some View {

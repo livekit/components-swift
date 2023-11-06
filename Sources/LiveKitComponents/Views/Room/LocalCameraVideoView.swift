@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct LocalCameraVideoView: View {
-
     @EnvironmentObject var room: Room
     @EnvironmentObject var ui: UIPreference
 
     public init() {}
 
     public var body: some View {
-
         GeometryReader { geometry in
 
             ZStack {

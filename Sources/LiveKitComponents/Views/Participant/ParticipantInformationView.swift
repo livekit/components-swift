@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct ParticipantInformationView: View {
-
     @EnvironmentObject var participant: Participant
     @EnvironmentObject var ui: UIPreference
 
     public var body: some View {
-
         HStack(spacing: ui.paddingSmall) {
-
             Text(participant.identity)
                 .fontWeight(.bold)
 

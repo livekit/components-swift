@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct RoomScope<Content: View>: View {
-
     var content: () -> Content
     let room: Room
 
     public init(room: Room? = nil,
-                @ViewBuilder _ content: @escaping () -> Content) {
-
+                @ViewBuilder _ content: @escaping () -> Content)
+    {
         self.room = room ?? Room()
         self.content = content
     }

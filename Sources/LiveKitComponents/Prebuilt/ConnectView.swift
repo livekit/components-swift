@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct ConnectView: View {
-
     @EnvironmentObject var room: Room
     @EnvironmentObject var ui: UIPreference
 
@@ -26,9 +25,7 @@ public struct ConnectView: View {
     @AppStorage("token") var token: String = ""
 
     public var body: some View {
-
         VStack(spacing: 15) {
-
             ui.textFieldContainer {
                 ui.textField(for: $url, type: .url)
             } label: {

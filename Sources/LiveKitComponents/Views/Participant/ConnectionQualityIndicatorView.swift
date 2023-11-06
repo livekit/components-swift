@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct ConnectionQualityIndicatorView: View {
-
     @EnvironmentObject var participant: Participant
     @EnvironmentObject var ui: UIPreference
 

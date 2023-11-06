@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct RoomNameView: View {
-
     @EnvironmentObject var room: Room
 
     public var body: some View {

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 extension GeometryProxy {
-
     public var isTall: Bool {
         size.height > size.width
     }

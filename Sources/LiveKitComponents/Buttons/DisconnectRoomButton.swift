@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct DisconnectRoomButton<Label: View>: View {
-
     @EnvironmentObject var room: Room
 
     let label: ComponentBuilder<Label>

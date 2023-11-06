@@ -17,12 +17,9 @@
 import SwiftUI
 
 public struct VideoConferenceView: View {
-
     @EnvironmentObject var ui: UIPreference
 
-    public init() {
-
-    }
+    public init() {}
 
     func buildNotConnectedView() -> some View {
         ConnectView()

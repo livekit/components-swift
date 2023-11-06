@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 // Scope for Components framework
 struct LiveKitComponents {

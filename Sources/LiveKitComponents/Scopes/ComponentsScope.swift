@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct ComponentsScope<Content: View>: View {
-
     var content: () -> Content
     let preference: UIPreference
 
     public init(configuration: UIPreference? = nil,
-                @ViewBuilder _ content: @escaping () -> Content) {
-
-        self.preference = configuration ?? UIPreference()
+                @ViewBuilder _ content: @escaping () -> Content)
+    {
+        preference = configuration ?? UIPreference()
         self.content = content
     }
 
