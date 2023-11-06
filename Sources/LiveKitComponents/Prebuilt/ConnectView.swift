@@ -46,7 +46,7 @@ public struct ConnectView: View {
             } else {
                 ui.button {
                     Task {
-                        room.connect(url: url, token: token)
+                        try await room.connect(url: url, token: token)
                     }
                 } label: {
                     Text("Connect")

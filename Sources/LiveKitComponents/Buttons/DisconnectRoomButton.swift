@@ -30,7 +30,7 @@ public struct DisconnectRoomButton<Label: View>: View {
     public var body: some View {
         Button {
             Task {
-                try await room.disconnect()
+                await room.disconnect()
             }
         } label: {
             label()
