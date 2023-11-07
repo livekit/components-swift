@@ -31,7 +31,7 @@ public struct CameraToggleButton<Label: View, PublishedLabel: View>: View {
     }
 
     var isCameraEnabled: Bool {
-        room.localParticipant?.isCameraEnabled() ?? false
+        room.localParticipant.isCameraEnabled()
     }
 
     public var body: some View {
@@ -39,8 +39,7 @@ public struct CameraToggleButton<Label: View, PublishedLabel: View>: View {
             Task {
                 isBusy = true
                 defer { Task { @MainActor in isBusy = false } }
-                guard let localParticipant = room.localParticipant else { return }
-                try await localParticipant.setCamera(enabled: !isCameraEnabled)
+                try await room.localParticipant.setCamera(enabled: !isCameraEnabled)
             }
         } label: {
             if isCameraEnabled {

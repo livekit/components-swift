@@ -31,7 +31,7 @@ public struct MicrophoneToggleButton<Label: View, PublishedLabel: View>: View {
     }
 
     var isMicrophoneEnabled: Bool {
-        room.localParticipant?.isMicrophoneEnabled() ?? false
+        room.localParticipant.isMicrophoneEnabled()
     }
 
     public var body: some View {
@@ -39,8 +39,7 @@ public struct MicrophoneToggleButton<Label: View, PublishedLabel: View>: View {
             Task {
                 isBusy = true
                 defer { Task { @MainActor in isBusy = false } }
-                guard let localParticipant = room.localParticipant else { return }
-                try await localParticipant.setMicrophone(enabled: !isMicrophoneEnabled)
+                try await room.localParticipant.setMicrophone(enabled: !isMicrophoneEnabled)
             }
         } label: {
             if isMicrophoneEnabled {

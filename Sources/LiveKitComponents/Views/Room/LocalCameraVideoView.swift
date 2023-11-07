@@ -29,7 +29,7 @@ public struct LocalCameraVideoView: View {
             ZStack {
                 ui.videoDisabledView(geometry: geometry)
 
-                if let track = room.localParticipant?.firstCameraVideoTrack {
+                if let track = room.localParticipant.firstCameraVideoTrack {
                     SwiftUIVideoView(track)
                 }
             }
