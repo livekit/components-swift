@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 // Scope for Components framework
-struct LiveKitComponents {
+enum LiveKitComponents {
     public static let version = "0.0.1"
 }
 
