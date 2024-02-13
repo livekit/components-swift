@@ -33,7 +33,7 @@ public struct TrackPublicationStateBuilder<OnView: View,
     }
 
     public var body: some View {
-        if trackPublication.subscribed, !trackPublication.muted {
+        if trackPublication.isSubscribed, !trackPublication.isMuted {
             return AnyView(onBuilder())
         } else {
             return AnyView(offBuilder())

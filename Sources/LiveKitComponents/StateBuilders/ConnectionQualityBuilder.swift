@@ -21,23 +21,27 @@ import SwiftUI
 ///
 /// > Note: References `Participant` environment object.
 public struct ConnectionQualityBuilder<UnknownView: View,
+    LostView: View,
     PoorView: View,
     GoodView: View,
     ExcellentView: View>: View
 {
     @EnvironmentObject var participant: Participant
 
+    var lostBuilder: ComponentBuilder<LostView>
     var unknownBuilder: ComponentBuilder<UnknownView>
     var poorBuilder: ComponentBuilder<PoorView>
     var goodBuilder: ComponentBuilder<GoodView>
     var excellentBuilder: ComponentBuilder<ExcellentView>
 
     public init(@ViewBuilder unknown: @escaping ComponentBuilder<UnknownView>,
+                @ViewBuilder lost: @escaping ComponentBuilder<LostView>,
                 @ViewBuilder poor: @escaping ComponentBuilder<PoorView>,
                 @ViewBuilder good: @escaping ComponentBuilder<GoodView>,
                 @ViewBuilder excellent: @escaping ComponentBuilder<ExcellentView>)
     {
         unknownBuilder = unknown
+        lostBuilder = lost
         poorBuilder = poor
         goodBuilder = good
         excellentBuilder = excellent
@@ -46,6 +50,7 @@ public struct ConnectionQualityBuilder<UnknownView: View,
     public var body: some View {
         switch participant.connectionQuality {
         case .unknown: return AnyView(unknownBuilder())
+        case .lost: return AnyView(lostBuilder())
         case .poor: return AnyView(poorBuilder())
         case .good: return AnyView(goodBuilder())
         case .excellent: return AnyView(excellentBuilder())

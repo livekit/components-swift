@@ -25,7 +25,7 @@ public struct ConnectionStateBuilder<DisconnectedView: View,
     ReconnectingView: View,
     ConnectedView: View>: View
 {
-    public typealias DisconnectedComponentBuilder<Content: View> = (_ reason: DisconnectReason?) -> Content
+    public typealias DisconnectedComponentBuilder<Content: View> = (_ disconnectError: LiveKitError?) -> Content
 
     @EnvironmentObject var room: Room
 
@@ -47,7 +47,7 @@ public struct ConnectionStateBuilder<DisconnectedView: View,
 
     public var body: some View {
         switch room.connectionState {
-        case let .disconnected(reason): return AnyView(disconnected(reason))
+        case .disconnected: return AnyView(disconnected(room.disconnectError))
         case .connecting: return AnyView(connecting())
         case .reconnecting: return AnyView(reconnecting())
         case .connected: return AnyView(connected())

@@ -28,8 +28,8 @@ public struct VideoTrackPublicationView: View {
                 ui.videoDisabledView(geometry: geometry)
 
                 if let track = trackPublication.track as? VideoTrack,
-                   trackPublication.subscribed,
-                   !trackPublication.muted
+                   trackPublication.isSubscribed,
+                   !trackPublication.isMuted
                 {
                     SwiftUIVideoView(track
                         //                                 layoutMode: appCtx.videoViewMode,

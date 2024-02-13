@@ -23,7 +23,7 @@ public struct ParticipantInformationView: View {
 
     public var body: some View {
         HStack(spacing: ui.paddingSmall) {
-            Text(participant.identity ?? "")
+            Text(String(describing: participant.identity))
                 .fontWeight(.bold)
 
             if let audio = participant.firstAudioPublication {

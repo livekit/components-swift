@@ -48,7 +48,7 @@ public struct ConnectView: View {
                 } label: {
                     Text("Connect")
                 }
-                .disabled(!room.connectionState.isDisconnected)
+                .disabled(room.connectionState != .disconnected)
             }
         }
     }
