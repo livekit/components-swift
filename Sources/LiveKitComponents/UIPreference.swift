@@ -108,15 +108,15 @@ open class UIPreference: ObservableObject {
     }
 
     func connectionQualityIndicatorBuilder(connectionQuality: ConnectionQuality) -> some View {
-        if connectionQuality == .excellent {
-            return Image(systemName: "wifi")
+        if case .excellent = connectionQuality {
+            Image(systemName: "wifi")
                 .foregroundColor(.green)
-        } else if connectionQuality == .good {
-            return Image(systemName: "wifi")
+        } else if case .good = connectionQuality {
+            Image(systemName: "wifi")
                 .foregroundColor(Color.orange)
+        } else {
+            Image(systemName: "wifi.exclamationmark")
+                .foregroundColor(Color.red)
         }
-
-        return Image(systemName: "wifi.exclamationmark")
-            .foregroundColor(Color.red)
     }
 }

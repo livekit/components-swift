@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import LiveKit
 import SwiftUI
 
 public struct VideoConferenceView: View {
     @EnvironmentObject var ui: UIPreference
+    @EnvironmentObject var room: Room
 
     public init() {}
 
@@ -48,14 +50,10 @@ public struct VideoConferenceView: View {
     }
 
     public var body: some View {
-        ConnectionStateBuilder { _ in
-            buildNotConnectedView()
-        } connecting: {
-            buildNotConnectedView()
-        } reconnecting: {
+        if [.reconnecting, .connected].contains(room.connectionState) {
             buildConnectedView()
-        } connected: {
-            buildConnectedView()
+        } else {
+            buildNotConnectedView()
         }
     }
 }
