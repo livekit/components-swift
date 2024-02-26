@@ -29,11 +29,11 @@ public struct ParticipantInformationView: View {
             }
 
             if let audio = participant.firstAudioPublication {
-                TrackPublicationStateBuilder {
+                if audio.isSubscribed, !audio.isMuted {
                     ui.micEnabledView()
-                } off: {
+                } else {
                     ui.micDisabledView()
-                }.environmentObject(audio)
+                }
             } else {
                 ui.micDisabledView()
             }
