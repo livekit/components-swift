@@ -17,8 +17,8 @@
 import LiveKit
 import SwiftUI
 
-extension GeometryProxy {
-    public var isTall: Bool {
+public extension GeometryProxy {
+    var isTall: Bool {
         size.height > size.width
     }
 
