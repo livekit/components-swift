@@ -21,9 +21,11 @@ public struct VideoTrackPublicationView: View {
     @EnvironmentObject var trackPublication: TrackPublication
     @EnvironmentObject var ui: UIPreference
 
+    var layoutMode: VideoView.LayoutMode = .fill
+    var mirrorMode: VideoView.MirrorMode = .auto
+
     public var body: some View {
         GeometryReader { geometry in
-
             ZStack {
                 ui.videoDisabledView(geometry: geometry)
 
@@ -31,14 +33,9 @@ public struct VideoTrackPublicationView: View {
                    trackPublication.isSubscribed,
                    !trackPublication.isMuted
                 {
-                    SwiftUIVideoView(track
-                        //                                 layoutMode: appCtx.videoViewMode,
-                        //                                 mirrorMode: appCtx.videoViewMirrored ? .mirror : .auto,
-                        //                                 debugMode: false, // appCtx.showInformationOverlay,
-                        //                                 isRendering: $isRendering,
-                        //                                 dimensions: $dimensions,
-                        //                                 trackStats: $videoTrackStats
-                    )
+                    SwiftUIVideoView(track,
+                                     layoutMode: layoutMode,
+                                     mirrorMode: mirrorMode)
                 }
             }
         }
