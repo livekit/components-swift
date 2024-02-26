@@ -23,10 +23,4 @@ final class LiveKitComponentsTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
     }
-
-    func testFailMacCatalyst() {
-        #if targetEnvironment(macCatalyst)
-            fatalError("Failing for Mac Catalyst")
-        #endif
-    }
 }
