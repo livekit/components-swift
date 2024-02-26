@@ -23,15 +23,17 @@ public struct ParticipantInformationView: View {
 
     public var body: some View {
         HStack(spacing: ui.paddingSmall) {
-            Text(participant.identity ?? "")
-                .fontWeight(.bold)
+            if let identity = participant.identity {
+                Text(String(describing: identity))
+                    .fontWeight(.bold)
+            }
 
             if let audio = participant.firstAudioPublication {
-                TrackPublicationStateBuilder {
+                if audio.isSubscribed, !audio.isMuted {
                     ui.micEnabledView()
-                } off: {
+                } else {
                     ui.micDisabledView()
-                }.environmentObject(audio)
+                }
             } else {
                 ui.micDisabledView()
             }

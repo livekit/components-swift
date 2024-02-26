@@ -32,14 +32,10 @@ public struct HorVGrid<Content: View>: View {
 
     public var body: some View {
         Group {
-            if #available(macOS 11.0, *) {
-                if axis == .vertical {
-                    LazyVGrid(columns: [GridItem(.flexible())], spacing: spacing, content: content)
-                } else {
-                    LazyHGrid(rows: [GridItem(.flexible())], spacing: spacing, content: content)
-                }
+            if axis == .vertical {
+                LazyVGrid(columns: [GridItem(.flexible())], spacing: spacing, content: content)
             } else {
-                // Fallback on earlier versions
+                LazyHGrid(rows: [GridItem(.flexible())], spacing: spacing, content: content)
             }
         }
     }

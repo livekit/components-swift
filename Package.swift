@@ -1,5 +1,5 @@
-// swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:5.7
+// (Xcode14.0+)
 
 import PackageDescription
 
@@ -8,6 +8,7 @@ let package = Package(
     platforms: [
         .iOS(.v14),
         .macOS(.v11),
+        .macCatalyst(.v14),
     ],
     products: [
         .library(
@@ -16,13 +17,15 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", .exact("1.0.13")),
+        .package(url: "https://github.com/livekit/client-sdk-swift.git", exact: "2.0.4"),
         .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.3.0"),
     ],
     targets: [
         .target(
             name: "LiveKitComponents",
-            dependencies: ["LiveKit"],
+            dependencies: [
+                .product(name: "LiveKit", package: "client-sdk-swift"),
+            ],
             path: "Sources"
         ),
         .testTarget(

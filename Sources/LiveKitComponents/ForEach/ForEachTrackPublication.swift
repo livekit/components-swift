@@ -43,7 +43,7 @@ public struct ForEachTrackPublication<Content: View>: View {
     }
 
     private func computedTrackPublications() -> [TrackPublication] {
-        let trackPublications = Array(participant.tracks.values)
+        let trackPublications = Array(participant.trackPublications.values)
         switch filter {
         case .all: return trackPublications
         case .video: return trackPublications.filter { $0.kind == .video }

@@ -17,10 +17,7 @@
 import LiveKit
 import SwiftUI
 
-// Scope for Components framework
-enum LiveKitComponents {
-    public static let version = "0.0.1"
-}
+public let liveKitComponentsVersion = "0.0.1"
 
 public typealias ComponentBuilder<Content: View> = () -> Content
 public typealias ParticipantComponentBuilder<Content: View> = (_: Participant) -> Content
