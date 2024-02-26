@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// Loops through `Participant`'s in the current `Room`.
 ///
 /// > Note: References `Room` environment object.
 public struct ForEachParticipant<Content: View>: View {
-
     @EnvironmentObject var room: Room
 
     public enum Filter {
@@ -39,15 +38,14 @@ public struct ForEachParticipant<Content: View>: View {
 
     public init(includeLocalParticipant: Bool = true,
                 filter: Filter = .all,
-                @ViewBuilder content: @escaping ParticipantComponentBuilder<Content>) {
-
+                @ViewBuilder content: @escaping ParticipantComponentBuilder<Content>)
+    {
         self.includeLocalParticipant = includeLocalParticipant
-        self.filterMode = filter
+        filterMode = filter
         self.content = content
     }
 
     private func sortedParticipants() -> [Participant] {
-
         // Include LocalParticipant or not
         let participants: [Participant] = Array(room.allParticipants.values).filter { participant in
             // Filter out LocalParticipant if not required

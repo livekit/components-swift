@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct RoomScope<Content: View>: View {
-
     var content: () -> Content
     let room: Room
 
     public init(room: Room? = nil,
-                @ViewBuilder _ content: @escaping () -> Content) {
-
+                @ViewBuilder _ content: @escaping () -> Content)
+    {
         self.room = room ?? Room()
         self.content = content
     }

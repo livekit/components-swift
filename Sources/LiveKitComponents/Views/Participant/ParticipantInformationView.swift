@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct ParticipantInformationView: View {
-
     @EnvironmentObject var participant: Participant
     @EnvironmentObject var ui: UIPreference
 
     public var body: some View {
-
         HStack(spacing: ui.paddingSmall) {
-
-            Text(participant.identity)
-                .fontWeight(.bold)
+            if let identity = participant.identity {
+                Text(String(describing: identity))
+                    .fontWeight(.bold)
+            }
 
             if let audio = participant.firstAudioPublication {
-                TrackPublicationStateBuilder {
+                if audio.isSubscribed, !audio.isMuted {
                     ui.micEnabledView()
-                } off: {
+                } else {
                     ui.micDisabledView()
-                }.environmentObject(audio)
+                }
             } else {
                 ui.micDisabledView()
             }

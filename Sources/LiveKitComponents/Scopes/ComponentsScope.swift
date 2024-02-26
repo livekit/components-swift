@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct ComponentsScope<Content: View>: View {
-
     var content: () -> Content
     let preference: UIPreference
 
     public init(configuration: UIPreference? = nil,
-                @ViewBuilder _ content: @escaping () -> Content) {
-
-        self.preference = configuration ?? UIPreference()
+                @ViewBuilder _ content: @escaping () -> Content)
+    {
+        preference = configuration ?? UIPreference()
         self.content = content
     }
 

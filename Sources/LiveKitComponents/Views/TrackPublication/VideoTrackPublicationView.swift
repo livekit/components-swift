@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct VideoTrackPublicationView: View {
-
     @EnvironmentObject var trackPublication: TrackPublication
     @EnvironmentObject var ui: UIPreference
 
+    var layoutMode: VideoView.LayoutMode = .fill
+    var mirrorMode: VideoView.MirrorMode = .auto
+
     public var body: some View {
         GeometryReader { geometry in
-
             ZStack {
                 ui.videoDisabledView(geometry: geometry)
 
                 if let track = trackPublication.track as? VideoTrack,
-                   trackPublication.subscribed,
-                   !trackPublication.muted {
-
-                    SwiftUIVideoView(track
-                                     //                                 layoutMode: appCtx.videoViewMode,
-                                     //                                 mirrorMode: appCtx.videoViewMirrored ? .mirror : .auto,
-                                     //                                 debugMode: false, // appCtx.showInformationOverlay,
-                                     //                                 isRendering: $isRendering,
-                                     //                                 dimensions: $dimensions,
-                                     //                                 trackStats: $videoTrackStats
-                    )
+                   trackPublication.isSubscribed,
+                   !trackPublication.isMuted
+                {
+                    SwiftUIVideoView(track,
+                                     layoutMode: layoutMode,
+                                     mirrorMode: mirrorMode)
                 }
             }
         }

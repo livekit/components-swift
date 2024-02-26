@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
+import LiveKit
 import SwiftUI
 
 public struct VideoConferenceView: View {
-
     @EnvironmentObject var ui: UIPreference
+    @EnvironmentObject var room: Room
 
-    public init() {
-
-    }
+    public init() {}
 
     func buildNotConnectedView() -> some View {
         ConnectView()
@@ -51,14 +50,10 @@ public struct VideoConferenceView: View {
     }
 
     public var body: some View {
-        ConnectionStateBuilder { _ in
-            buildNotConnectedView()
-        } connecting: {
-            buildNotConnectedView()
-        } reconnecting: {
+        if [.reconnecting, .connected].contains(room.connectionState) {
             buildConnectedView()
-        } connected: {
-            buildConnectedView()
+        } else {
+            buildNotConnectedView()
         }
     }
 }

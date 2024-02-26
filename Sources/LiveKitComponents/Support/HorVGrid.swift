@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ public struct HorVGrid<Content: View>: View {
 
     public init(axis: Axis = .horizontal,
                 spacing: CGFloat? = nil,
-                @ViewBuilder content: @escaping () -> Content) {
-
+                @ViewBuilder content: @escaping () -> Content)
+    {
         self.axis = axis
         self.spacing = spacing
         self.content = content
@@ -32,15 +32,10 @@ public struct HorVGrid<Content: View>: View {
 
     public var body: some View {
         Group {
-
-            if #available(macOS 11.0, *) {
-                if axis == .vertical {
-                    LazyVGrid(columns: [GridItem(.flexible())], spacing: spacing, content: content)
-                } else {
-                    LazyHGrid(rows: [GridItem(.flexible())], spacing: spacing, content: content)
-                }
+            if axis == .vertical {
+                LazyVGrid(columns: [GridItem(.flexible())], spacing: spacing, content: content)
             } else {
-                // Fallback on earlier versions
+                LazyHGrid(rows: [GridItem(.flexible())], spacing: spacing, content: content)
             }
         }
     }

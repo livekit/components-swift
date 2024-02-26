@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 public struct LocalCameraVideoView: View {
-
     @EnvironmentObject var room: Room
     @EnvironmentObject var ui: UIPreference
 
     public init() {}
 
     public var body: some View {
-
         GeometryReader { geometry in
 
             ZStack {
                 ui.videoDisabledView(geometry: geometry)
 
-                if let track = room.localParticipant?.firstCameraVideoTrack {
+                if let track = room.localParticipant.firstCameraVideoTrack {
                     SwiftUIVideoView(track)
                 }
             }

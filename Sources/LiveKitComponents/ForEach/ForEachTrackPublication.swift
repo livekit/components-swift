@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
 /// Loops through `TrackPublications`'s in the current `Participant`.
 ///
@@ -24,7 +24,6 @@ import LiveKit
 ///
 /// > Note: References `Participant` environment object.
 public struct ForEachTrackPublication<Content: View>: View {
-
     public enum Filter {
         case all
         case video
@@ -37,14 +36,14 @@ public struct ForEachTrackPublication<Content: View>: View {
     let content: TrackPublicationComponentBuilder<Content>
 
     public init(filter: Filter = .video,
-                @ViewBuilder content: @escaping TrackPublicationComponentBuilder<Content>) {
-
+                @ViewBuilder content: @escaping TrackPublicationComponentBuilder<Content>)
+    {
         self.filter = filter
         self.content = content
     }
 
     private func computedTrackPublications() -> [TrackPublication] {
-        let trackPublications = Array(participant.tracks.values)
+        let trackPublications = Array(participant.trackPublications.values)
         switch filter {
         case .all: return trackPublications
         case .video: return trackPublications.filter { $0.kind == .video }
