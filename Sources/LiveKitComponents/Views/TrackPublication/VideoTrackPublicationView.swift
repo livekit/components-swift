@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 public struct VideoTrackPublicationView: View {
-    @EnvironmentObject var trackPublication: TrackPublication
+    @EnvironmentObject var trackReference: TrackReference
     @EnvironmentObject var ui: UIPreference
 
     var layoutMode: VideoView.LayoutMode = .fill
@@ -29,7 +29,8 @@ public struct VideoTrackPublicationView: View {
             ZStack {
                 ui.videoDisabledView(geometry: geometry)
 
-                if let track = trackPublication.track as? VideoTrack,
+                if let trackPublication = trackReference.resolve(),
+                   let track = trackPublication.track as? VideoTrack,
                    trackPublication.isSubscribed,
                    !trackPublication.isMuted
                 {

@@ -23,7 +23,7 @@ import SwiftUI
 /// - filter: Type of track to loop through, defaults to `.video`.
 ///
 /// > Note: References `Participant` environment object.
-public struct ForEachTrackPublication<Content: View>: View {
+public struct ForEachTrack<Content: View>: View {
     public enum Filter {
         case all
         case video
@@ -33,10 +33,10 @@ public struct ForEachTrackPublication<Content: View>: View {
     @EnvironmentObject var participant: Participant
 
     let filter: Filter
-    let content: TrackPublicationComponentBuilder<Content>
+    let content: TrackReferenceComponentBuilder<Content>
 
     public init(filter: Filter = .video,
-                @ViewBuilder content: @escaping TrackPublicationComponentBuilder<Content>)
+                @ViewBuilder content: @escaping TrackReferenceComponentBuilder<Content>)
     {
         self.filter = filter
         self.content = content
@@ -53,8 +53,10 @@ public struct ForEachTrackPublication<Content: View>: View {
 
     public var body: some View {
         ForEach(computedTrackPublications()) { trackPublication in
-            content(trackPublication)
-                .environmentObject(trackPublication)
+            let trackReference = TrackReference(participant: participant,
+                                                publication: trackPublication)
+            content(trackReference)
+                .environmentObject(trackReference)
         }
     }
 }

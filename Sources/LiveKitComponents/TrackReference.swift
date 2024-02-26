@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 LiveKit
+ * Copyright 2024 LiveKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,38 @@
  * limitations under the License.
  */
 
-import SwiftUI
 import LiveKit
+import SwiftUI
 
-public struct TrackReference {
-    let participantSid: Sid?
-    let publicationSid: Sid
-    let source: Track.Source
-}
+open class TrackReference: ObservableObject {
+    public let participant: Participant
+    public let publication: TrackPublication?
+    public let name: String?
+    public let source: Track.Source?
 
-public struct TrackFinder<FoundView: View, NotFoundView: View>: View {
-
-    @EnvironmentObject var room: Room
-
-    let reference: TrackReference
-    let foundBuilder: ComponentBuilder<FoundView>
-    let notFoundBuilder: ComponentBuilder<NotFoundView>
-
-    public init(_ reference: TrackReference,
-                @ViewBuilder found: @escaping ComponentBuilder<FoundView>,
-                @ViewBuilder notFound: @escaping ComponentBuilder<NotFoundView>) {
-
-        self.reference = reference
-        self.foundBuilder = found
-        self.notFoundBuilder = notFound
+    public init(participant: Participant, publication: TrackPublication? = nil, name: String? = nil, source: Track.Source? = nil) {
+        self.participant = participant
+        self.publication = publication
+        self.name = name
+        self.source = source
     }
 
-    public var body: some View {
+    /// Attempts to reseolve ``TrackPublication`` in order: publication, name, source.
+    public func resolve() -> TrackPublication? {
+        if let publication {
+            return publication
+        } else if let name, let source, let publication = participant.trackPublications.first(where: { $0.value.name == name && $0.value.source == source })?.value {
+            return publication
+        } else if let name, let publication = participant.trackPublications.first(where: { $0.value.name == name })?.value {
+            return publication
+        } else if let source, let publication = participant.trackPublications.first(where: { $0.value.source == source })?.value {
+            return publication
+        }
 
-        // TODO: Implement logic...
+        return nil
+    }
 
-        AnyView(foundBuilder())
+    public var isResolvable: Bool {
+        resolve() != nil
     }
 }
