@@ -17,7 +17,7 @@
 import LiveKit
 import SwiftUI
 
-public struct VideoTrackPublicationView: View {
+public struct VideoTrackView: View {
     @EnvironmentObject var trackReference: TrackReference
     @EnvironmentObject var ui: UIPreference
 

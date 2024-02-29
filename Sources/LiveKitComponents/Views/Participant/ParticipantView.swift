@@ -33,7 +33,7 @@ public struct ParticipantView: View {
                 let cameraReference = TrackReference(participant: participant, source: .camera)
 
                 if cameraReference.isResolvable {
-                    VideoTrackPublicationView()
+                    VideoTrackView()
                         .environmentObject(cameraReference)
                 } else {
                     ui.videoDisabledView(geometry: geometry)
