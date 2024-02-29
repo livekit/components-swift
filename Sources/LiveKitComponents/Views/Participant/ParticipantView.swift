@@ -30,12 +30,15 @@ public struct ParticipantView: View {
     public var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
-                if let trackPublication = participant.firstCameraPublication {
-                    VideoTrackPublicationView()
-                        .environmentObject(trackPublication)
+                let cameraReference = TrackReference(participant: participant, source: .camera)
+
+                if cameraReference.isResolvable {
+                    VideoTrackView()
+                        .environmentObject(cameraReference)
                 } else {
                     ui.videoDisabledView(geometry: geometry)
                 }
+
                 if showInformation {
                     ParticipantInformationView()
                         .padding(5)
