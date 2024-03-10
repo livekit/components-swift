@@ -99,7 +99,7 @@ open class UIPreference: ObservableObject {
         // TODO: add iOS unique view modifiers
         #if os(iOS)
             .autocapitalization(.none)
-            // .keyboardType(type.toiOSType())
+        // .keyboardType(type.toiOSType())
         #endif
     }
 
