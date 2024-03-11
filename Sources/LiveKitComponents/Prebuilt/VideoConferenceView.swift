@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct VideoConferenceView: View {
     @EnvironmentObject var room: Room
-    @Environment(\.uiPreference) var ui: UIPreference
+    @Environment(\.liveKitUIPreference) var ui: UIPreference
 
     public init() {}
 

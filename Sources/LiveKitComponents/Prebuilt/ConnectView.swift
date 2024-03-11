@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct ConnectView: View {
     @EnvironmentObject var room: Room
-    @Environment(\.uiPreference) var ui: UIPreference
+    @Environment(\.liveKitUIPreference) var ui: UIPreference
 
     @AppStorage("url") var url: String = ""
     @AppStorage("token") var token: String = ""

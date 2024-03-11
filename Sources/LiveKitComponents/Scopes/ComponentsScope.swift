@@ -23,7 +23,7 @@ public struct LiveKitComponentsEnvironmentKey: EnvironmentKey {
 }
 
 public extension EnvironmentValues {
-    var uiPreference: UIPreference {
+    var liveKitUIPreference: UIPreference {
         get { self[LiveKitComponentsEnvironmentKey.self] }
         set { self[LiveKitComponentsEnvironmentKey.self] = newValue }
     }
@@ -42,6 +42,6 @@ public struct ComponentsScope<Content: View>: View {
 
     public var body: some View {
         content()
-            .environment(\.uiPreference, preference)
+            .environment(\.liveKitUIPreference, preference)
     }
 }

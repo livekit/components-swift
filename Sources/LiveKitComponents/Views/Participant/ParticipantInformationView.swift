@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct ParticipantInformationView: View {
     @EnvironmentObject var participant: Participant
-    @Environment(\.uiPreference) var ui: UIPreference
+    @Environment(\.liveKitUIPreference) var ui: UIPreference
 
     public var body: some View {
         HStack(spacing: ui.paddingSmall) {
