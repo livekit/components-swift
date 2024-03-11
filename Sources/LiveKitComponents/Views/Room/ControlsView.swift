@@ -21,15 +21,15 @@ public struct ControlsView: View {
 
     public var body: some View {
         CameraToggleButton {
-            ui.enableVideoView()
+            ui.enableCameraView()
         } published: {
-            ui.disableVideoView()
+            ui.disableCameraView()
         }
 
         MicrophoneToggleButton {
-            ui.enableMicrophoneView()
+            ui.enableMicView()
         } published: {
-            ui.disableMicrophoneView()
+            ui.disableMicView()
         }
 
         DisconnectRoomButton {

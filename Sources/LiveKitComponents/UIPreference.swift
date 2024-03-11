@@ -62,20 +62,20 @@ open class UIPreference: ObservableObject {
             .foregroundColor(.red))
     }
 
-    open func enableVideoView() -> AnyView {
+    open func enableCameraView() -> AnyView {
         AnyView(Image(systemName: "video.slash.fill"))
     }
 
-    open func disableVideoView() -> AnyView {
+    open func disableCameraView() -> AnyView {
         AnyView(Image(systemName: "video.fill")
             .foregroundColor(.green))
     }
 
-    open func enableMicrophoneView() -> AnyView {
+    open func enableMicView() -> AnyView {
         AnyView(Image(systemName: "mic.slash.fill"))
     }
 
-    open func disableMicrophoneView() -> AnyView {
+    open func disableMicView() -> AnyView {
         AnyView(Image(systemName: "mic.fill")
             .foregroundColor(.orange))
     }
