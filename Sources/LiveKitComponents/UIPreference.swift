@@ -102,7 +102,8 @@ open class UIPreference: ObservableObject {
             #if os(iOS)
                 .autocapitalization(.none)
             // .keyboardType(type.toiOSType())
-            #endif)
+            #endif
+        )
     }
 
     func button(_ action: @escaping () -> Void, label: () -> some View) -> AnyView {
