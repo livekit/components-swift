@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 public struct LocalCameraPreview: View {
-    @EnvironmentObject var ui: UIPreference
+    @Environment(\.uiPreference) var ui: UIPreference
 
     let localVideoTrack: LocalVideoTrack
 

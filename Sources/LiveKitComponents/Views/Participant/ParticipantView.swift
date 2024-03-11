@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct ParticipantView: View {
     @EnvironmentObject var participant: Participant
-    @EnvironmentObject var ui: UIPreference
+    @Environment(\.uiPreference) var ui: UIPreference
 
     let showInformation: Bool
 

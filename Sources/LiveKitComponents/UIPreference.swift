@@ -33,87 +33,89 @@ open class UIPreference: ObservableObject {
     /// Spacing between ``ParticipantView``s.
     var participantViewSpacing: CGFloat { 8 }
 
+    public init() {}
+
     /// Placeholder view when the video is disabled or not available.
-    public func videoDisabledView(geometry: GeometryProxy) -> some View {
-        Image(systemName: "video.slash")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .foregroundColor(Color(.lightGray))
-            .frame(width: min(geometry.size.width, geometry.size.height) * 0.3)
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity
-            )
+    public func videoDisabledView(geometry: GeometryProxy) -> AnyView {
+        AnyView(
+            Image(systemName: "video.slash")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .foregroundColor(Color(.lightGray))
+                .frame(width: min(geometry.size.width, geometry.size.height) * 0.3)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity
+                ))
     }
 
-    func micEnabledView() -> some View {
-        Image(systemName: "mic.fill")
-            .foregroundColor(.orange)
+    func micEnabledView() -> AnyView {
+        AnyView(Image(systemName: "mic.fill")
+            .foregroundColor(.orange))
     }
 
     /// Placeholder view when the microphone is disabled or not available.
-    func micDisabledView() -> some View {
-        Image(systemName: "mic.slash.fill")
-            .foregroundColor(.red)
+    open func micDisabledView() -> AnyView {
+        AnyView(Image(systemName: "mic.slash.fill")
+            .foregroundColor(.red))
     }
 
-    func enableVideoView() -> some View {
-        Image(systemName: "video.slash.fill")
+    open func enableVideoView() -> AnyView {
+        AnyView(Image(systemName: "video.slash.fill"))
     }
 
-    func disableVideoView() -> some View {
-        Image(systemName: "video.fill")
-            .foregroundColor(.green)
+    func disableVideoView() -> AnyView {
+        AnyView(Image(systemName: "video.fill")
+            .foregroundColor(.green))
     }
 
-    func enableMicrophoneView() -> some View {
-        Image(systemName: "mic.slash.fill")
+    open func enableMicrophoneView() -> AnyView {
+        AnyView(Image(systemName: "mic.slash.fill"))
     }
 
-    func disableMicrophoneView() -> some View {
-        Image(systemName: "mic.fill")
-            .foregroundColor(.orange)
+    func disableMicrophoneView() -> AnyView {
+        AnyView(Image(systemName: "mic.fill")
+            .foregroundColor(.orange))
     }
 
-    func disconnectView() -> some View {
-        Image(systemName: "xmark.circle.fill")
-            .foregroundColor(.red)
+    func disconnectView() -> AnyView {
+        AnyView(Image(systemName: "xmark.circle.fill")
+            .foregroundColor(.red))
     }
 
-    func textFieldContainer(_ childView: () -> some View, label: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 10.0) {
+    func textFieldContainer(_ childView: () -> some View, label: () -> some View) -> AnyView {
+        AnyView(VStack(alignment: .leading, spacing: 10.0) {
             label()
-
             childView()
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10.0)
                     .strokeBorder(Color.white.opacity(0.3),
                                   style: StrokeStyle(lineWidth: 1.0)))
-        }
+        })
     }
 
-    func textField(for text: Binding<String>, type _: TextFieldType) -> some View {
-        TextField("", text: text)
+    func textField(for text: Binding<String>, type _: TextFieldType) -> AnyView {
+        AnyView(TextField("", text: text)
             .textFieldStyle(PlainTextFieldStyle())
             .disableAutocorrection(true)
-        // TODO: add iOS unique view modifiers
-        #if os(iOS)
-            .autocapitalization(.none)
-        // .keyboardType(type.toiOSType())
-        #endif
+            // TODO: add iOS unique view modifiers
+            #if os(iOS)
+                .autocapitalization(.none)
+            // .keyboardType(type.toiOSType())
+            #endif)
     }
 
-    func button(_ action: @escaping () -> Void, label: () -> some View) -> some View {
-        Button(action: action, label: label)
+    func button(_ action: @escaping () -> Void, label: () -> some View) -> AnyView {
+        AnyView(Button(action: action, label: label))
     }
 
-    func connectionQualityIndicatorBuilder(connectionQuality: ConnectionQuality) -> some View {
+    func connectionQualityIndicatorBuilder(connectionQuality: ConnectionQuality) -> AnyView {
         if case .excellent = connectionQuality {
-            return Image(systemName: "wifi").foregroundColor(.green)
+            return AnyView(Image(systemName: "wifi").foregroundColor(.green))
         } else if case .good = connectionQuality {
-            return Image(systemName: "wifi").foregroundColor(Color.orange)
+            return AnyView(Image(systemName: "wifi").foregroundColor(Color.orange))
         }
 
-        return Image(systemName: "wifi.exclamationmark").foregroundColor(Color.red)
+        return AnyView(Image(systemName: "wifi.exclamationmark").foregroundColor(Color.red))
     }
 }

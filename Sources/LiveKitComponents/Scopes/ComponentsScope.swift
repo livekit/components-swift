@@ -17,6 +17,18 @@
 import LiveKit
 import SwiftUI
 
+public struct LiveKitComponentsEnvironmentKey: EnvironmentKey {
+    // This is the default value that SwiftUI will fallback to if you don't pass the object
+    public static var defaultValue: UIPreference = .init()
+}
+
+public extension EnvironmentValues {
+    var uiPreference: UIPreference {
+        get { self[LiveKitComponentsEnvironmentKey.self] }
+        set { self[LiveKitComponentsEnvironmentKey.self] = newValue }
+    }
+}
+
 public struct ComponentsScope<Content: View>: View {
     var content: () -> Content
     let preference: UIPreference
@@ -30,6 +42,6 @@ public struct ComponentsScope<Content: View>: View {
 
     public var body: some View {
         content()
-            .environmentObject(preference)
+            .environment(\.uiPreference, preference)
     }
 }
