@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 /// Subclass to customize default components UI.
-open class UIPreference: ObservableObject {
+open class UIOptions: ObservableObject {
     // MARK: - Types
 
     public enum TextFieldType {

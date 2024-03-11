@@ -17,7 +17,7 @@
 import SwiftUI
 
 public struct ControlsView: View {
-    @Environment(\.liveKitUIPreference) var ui: UIPreference
+    @Environment(\.liveKitUIOptions) var ui: UIOptions
 
     public var body: some View {
         CameraToggleButton {

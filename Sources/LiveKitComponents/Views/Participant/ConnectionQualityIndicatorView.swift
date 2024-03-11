@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct ConnectionQualityIndicatorView: View {
     @EnvironmentObject var participant: Participant
-    @Environment(\.liveKitUIPreference) var ui: UIPreference
+    @Environment(\.liveKitUIOptions) var ui: UIOptions
 
     public var body: some View {
         ui.connectionQualityIndicatorBuilder(connectionQuality: participant.connectionQuality)
