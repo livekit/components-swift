@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct VideoTrackView: View {
     @EnvironmentObject var trackReference: TrackReference
-    @EnvironmentObject var ui: UIPreference
+    @Environment(\.liveKitUIOptions) var ui: UIOptions
 
     var layoutMode: VideoView.LayoutMode = .fill
     var mirrorMode: VideoView.MirrorMode = .auto

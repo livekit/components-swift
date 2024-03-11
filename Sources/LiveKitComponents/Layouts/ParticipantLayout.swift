@@ -17,7 +17,7 @@
 import SwiftUI
 
 struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable, Data.Index: Hashable {
-    @EnvironmentObject var ui: UIPreference
+    @Environment(\.liveKitUIOptions) var ui: UIOptions
 
     private let data: Data
     private let spacing: CGFloat?

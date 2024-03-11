@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct LocalCameraVideoView: View {
     @EnvironmentObject var room: Room
-    @EnvironmentObject var ui: UIPreference
+    @Environment(\.liveKitUIOptions) var ui: UIOptions
 
     public init() {}
 
