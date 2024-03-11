@@ -19,24 +19,26 @@ import SwiftUI
 
 /// Subclass to customize default components UI.
 open class UIPreference: ObservableObject {
-    enum TextFieldType {
+    // MARK: - Types
+
+    public enum TextFieldType {
         case url
         case token
     }
 
-    enum ButtonType {
+    public enum ButtonType {
         case connect
     }
 
-    var paddingSmall: CGFloat { 5 }
+    open var paddingSmall: CGFloat { 5 }
 
     /// Spacing between ``ParticipantView``s.
-    var participantViewSpacing: CGFloat { 8 }
+    open var participantViewSpacing: CGFloat { 8 }
 
     public init() {}
 
     /// Placeholder view when the video is disabled or not available.
-    public func videoDisabledView(geometry: GeometryProxy) -> AnyView {
+    open func videoDisabledView(geometry: GeometryProxy) -> AnyView {
         AnyView(
             Image(systemName: "video.slash")
                 .resizable()
@@ -49,7 +51,7 @@ open class UIPreference: ObservableObject {
                 ))
     }
 
-    func micEnabledView() -> AnyView {
+    open func micEnabledView() -> AnyView {
         AnyView(Image(systemName: "mic.fill")
             .foregroundColor(.orange))
     }
@@ -64,7 +66,7 @@ open class UIPreference: ObservableObject {
         AnyView(Image(systemName: "video.slash.fill"))
     }
 
-    func disableVideoView() -> AnyView {
+    open func disableVideoView() -> AnyView {
         AnyView(Image(systemName: "video.fill")
             .foregroundColor(.green))
     }
@@ -73,17 +75,17 @@ open class UIPreference: ObservableObject {
         AnyView(Image(systemName: "mic.slash.fill"))
     }
 
-    func disableMicrophoneView() -> AnyView {
+    open func disableMicrophoneView() -> AnyView {
         AnyView(Image(systemName: "mic.fill")
             .foregroundColor(.orange))
     }
 
-    func disconnectView() -> AnyView {
+    open func disconnectView() -> AnyView {
         AnyView(Image(systemName: "xmark.circle.fill")
             .foregroundColor(.red))
     }
 
-    func textFieldContainer(_ childView: () -> some View, label: () -> some View) -> AnyView {
+    open func textFieldContainer(_ childView: () -> some View, label: () -> some View) -> AnyView {
         AnyView(VStack(alignment: .leading, spacing: 10.0) {
             label()
             childView()
@@ -94,23 +96,22 @@ open class UIPreference: ObservableObject {
         })
     }
 
-    func textField(for text: Binding<String>, type _: TextFieldType) -> AnyView {
+    open func textField(for text: Binding<String>, type _: TextFieldType) -> AnyView {
         AnyView(TextField("", text: text)
             .textFieldStyle(PlainTextFieldStyle())
-            .disableAutocorrection(true)
             // TODO: add iOS unique view modifiers
             #if os(iOS)
                 .autocapitalization(.none)
             // .keyboardType(type.toiOSType())
             #endif
-        )
+                .disableAutocorrection(true))
     }
 
-    func button(_ action: @escaping () -> Void, label: () -> some View) -> AnyView {
+    open func button(_ action: @escaping () -> Void, label: () -> some View) -> AnyView {
         AnyView(Button(action: action, label: label))
     }
 
-    func connectionQualityIndicatorBuilder(connectionQuality: ConnectionQuality) -> AnyView {
+    open func connectionQualityIndicatorBuilder(connectionQuality: ConnectionQuality) -> AnyView {
         if case .excellent = connectionQuality {
             return AnyView(Image(systemName: "wifi").foregroundColor(.green))
         } else if case .good = connectionQuality {
