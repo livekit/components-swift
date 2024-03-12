@@ -19,34 +19,33 @@ import SwiftUI
 
 /// The Camera Toggle Button is a button that toggles the camera on and off.
 public struct CameraToggleButton<Label: View, PublishedLabel: View>: View {
-    @EnvironmentObject var room: Room
-    @State var isBusy = false
+    @EnvironmentObject private var _room: Room
+    @State private var _isBusy = false
+    private let _label: ComponentBuilder<Label>
+    private let _publishedLabel: ComponentBuilder<PublishedLabel>
 
-    let label: ComponentBuilder<Label>
-    let publishedLabel: ComponentBuilder<PublishedLabel>
-
-    public init(@ViewBuilder label: @escaping ComponentBuilder<Label>, @ViewBuilder published: @escaping ComponentBuilder<PublishedLabel>) {
-        self.label = label
-        publishedLabel = published
+    private var isCameraEnabled: Bool {
+        _room.localParticipant.isCameraEnabled()
     }
 
-    var isCameraEnabled: Bool {
-        room.localParticipant.isCameraEnabled()
+    public init(@ViewBuilder label: @escaping ComponentBuilder<Label>, @ViewBuilder published: @escaping ComponentBuilder<PublishedLabel>) {
+        _label = label
+        _publishedLabel = published
     }
 
     public var body: some View {
         Button {
             Task {
-                isBusy = true
-                defer { Task { @MainActor in isBusy = false } }
-                try await room.localParticipant.setCamera(enabled: !isCameraEnabled)
+                _isBusy = true
+                defer { Task { @MainActor in _isBusy = false } }
+                try await _room.localParticipant.setCamera(enabled: !isCameraEnabled)
             }
         } label: {
             if isCameraEnabled {
-                publishedLabel()
+                _publishedLabel()
             } else {
-                label()
+                _label()
             }
-        }.disabled(isBusy)
+        }.disabled(_isBusy)
     }
 }

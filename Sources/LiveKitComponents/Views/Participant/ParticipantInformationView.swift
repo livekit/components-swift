@@ -18,24 +18,24 @@ import LiveKit
 import SwiftUI
 
 public struct ParticipantInformationView: View {
-    @EnvironmentObject var participant: Participant
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
+    @EnvironmentObject private var _participant: Participant
+    @Environment(\.liveKitUIOptions) private var _ui: UIOptions
 
     public var body: some View {
-        HStack(spacing: ui.paddingSmall) {
-            if let identity = participant.identity {
+        HStack(spacing: _ui.paddingSmall) {
+            if let identity = _participant.identity {
                 Text(String(describing: identity))
                     .fontWeight(.bold)
             }
 
-            if let audio = participant.firstAudioPublication {
+            if let audio = _participant.firstAudioPublication {
                 if audio.isSubscribed, !audio.isMuted {
-                    ui.micEnabledView()
+                    _ui.micEnabledView()
                 } else {
-                    ui.micDisabledView()
+                    _ui.micDisabledView()
                 }
             } else {
-                ui.micDisabledView()
+                _ui.micDisabledView()
             }
 
             ConnectionQualityIndicatorView()

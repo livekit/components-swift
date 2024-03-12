@@ -18,28 +18,27 @@ import LiveKit
 import SwiftUI
 
 public struct ParticipantView: View {
-    @EnvironmentObject var participant: Participant
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
-
-    let showInformation: Bool
+    @EnvironmentObject private var _participant: Participant
+    @Environment(\.liveKitUIOptions) private var _ui: UIOptions
+    private let _showInformation: Bool
 
     public init(showInformation: Bool = true) {
-        self.showInformation = showInformation
+        _showInformation = showInformation
     }
 
     public var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
-                let cameraReference = TrackReference(participant: participant, source: .camera)
+                let cameraReference = TrackReference(participant: _participant, source: .camera)
 
                 if cameraReference.isResolvable {
                     VideoTrackView()
                         .environmentObject(cameraReference)
                 } else {
-                    ui.videoDisabledView(geometry: geometry)
+                    _ui.videoDisabledView(geometry: geometry)
                 }
 
-                if showInformation {
+                if _showInformation {
                     ParticipantInformationView()
                         .padding(5)
                         .background(Color.black.opacity(0.5))

@@ -30,18 +30,18 @@ public extension EnvironmentValues {
 }
 
 public struct ComponentsScope<Content: View>: View {
-    var content: () -> Content
-    let preference: UIOptions
+    private let _content: () -> Content
+    private let _options: UIOptions
 
     public init(uiOptions: UIOptions? = nil,
                 @ViewBuilder _ content: @escaping () -> Content)
     {
-        preference = uiOptions ?? UIOptions()
-        self.content = content
+        _options = uiOptions ?? UIOptions()
+        _content = content
     }
 
     public var body: some View {
-        content()
-            .environment(\.liveKitUIOptions, preference)
+        _content()
+            .environment(\.liveKitUIOptions, _options)
     }
 }

@@ -21,7 +21,7 @@ import SwiftUI
 ///
 /// > Note: References `Room` environment object.
 public struct ForEachParticipant<Content: View>: View {
-    @EnvironmentObject var room: Room
+    // MARK: - Public types
 
     public enum Filter {
         case all
@@ -31,26 +31,28 @@ public struct ForEachParticipant<Content: View>: View {
         case isPublishingAudio
     }
 
+    @EnvironmentObject private var _room: Room
+
     /// Whether to include the local participant in the enumeration
-    let includeLocalParticipant: Bool
-    let filterMode: Filter
-    let content: ParticipantComponentBuilder<Content>
+    private let _includeLocalParticipant: Bool
+    private let _filterMode: Filter
+    private let _content: ParticipantComponentBuilder<Content>
 
     public init(includeLocalParticipant: Bool = true,
                 filter: Filter = .all,
                 @ViewBuilder content: @escaping ParticipantComponentBuilder<Content>)
     {
-        self.includeLocalParticipant = includeLocalParticipant
-        filterMode = filter
-        self.content = content
+        _includeLocalParticipant = includeLocalParticipant
+        _filterMode = filter
+        _content = content
     }
 
-    private func sortedParticipants() -> [Participant] {
+    private func _sortedParticipants() -> [Participant] {
         // Include LocalParticipant or not
-        let participants: [Participant] = Array(room.allParticipants.values).filter { participant in
+        let participants: [Participant] = Array(_room.allParticipants.values).filter { participant in
             // Filter out LocalParticipant if not required
-            if !includeLocalParticipant, participant is LocalParticipant { return false }
-            if case .canPublishVideoOrAudio = filterMode, !participant.permissions.canPublish { return false }
+            if !_includeLocalParticipant, participant is LocalParticipant { return false }
+            if case .canPublishVideoOrAudio = _filterMode, !participant.permissions.canPublish { return false }
             return true
         }
 
@@ -62,8 +64,8 @@ public struct ForEachParticipant<Content: View>: View {
     }
 
     public var body: some View {
-        ForEach(sortedParticipants()) { participant in
-            content(participant)
+        ForEach(_sortedParticipants()) { participant in
+            _content(participant)
                 .environmentObject(participant)
         }
     }

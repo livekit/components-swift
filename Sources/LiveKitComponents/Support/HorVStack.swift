@@ -18,11 +18,11 @@ import LiveKit
 import SwiftUI
 
 public struct HorVStack<Content: View>: View {
-    let axis: Axis
-    let horizontalAlignment: HorizontalAlignment
-    let verticalAlignment: VerticalAlignment
-    let spacing: CGFloat?
-    let content: () -> Content
+    private let _axis: Axis
+    private let _horizontalAlignment: HorizontalAlignment
+    private let _verticalAlignment: VerticalAlignment
+    private let _spacing: CGFloat?
+    private let _content: () -> Content
 
     public init(axis: Axis = .horizontal,
                 horizontalAlignment: HorizontalAlignment = .center,
@@ -30,19 +30,19 @@ public struct HorVStack<Content: View>: View {
                 spacing: CGFloat? = nil,
                 @ViewBuilder content: @escaping () -> Content)
     {
-        self.axis = axis
-        self.horizontalAlignment = horizontalAlignment
-        self.verticalAlignment = verticalAlignment
-        self.spacing = spacing
-        self.content = content
+        _axis = axis
+        _horizontalAlignment = horizontalAlignment
+        _verticalAlignment = verticalAlignment
+        _spacing = spacing
+        _content = content
     }
 
     public var body: some View {
         Group {
-            if axis == .vertical {
-                VStack(alignment: horizontalAlignment, spacing: spacing, content: content)
+            if _axis == .vertical {
+                VStack(alignment: _horizontalAlignment, spacing: _spacing, content: _content)
             } else {
-                HStack(alignment: verticalAlignment, spacing: spacing, content: content)
+                HStack(alignment: _verticalAlignment, spacing: _spacing, content: _content)
             }
         }
     }

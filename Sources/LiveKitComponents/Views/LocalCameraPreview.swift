@@ -20,10 +20,10 @@ import SwiftUI
 public struct LocalCameraPreview: View {
     @Environment(\.liveKitUIOptions) var ui: UIOptions
 
-    let localVideoTrack: LocalVideoTrack
+    private let _localVideoTrack: LocalVideoTrack
 
     public init(localVideoTrack: LocalVideoTrack? = nil) {
-        self.localVideoTrack = localVideoTrack ?? LocalVideoTrack.createCameraTrack()
+        _localVideoTrack = localVideoTrack ?? LocalVideoTrack.createCameraTrack()
     }
 
     public var body: some View {
@@ -32,16 +32,16 @@ public struct LocalCameraPreview: View {
             ZStack {
                 ui.videoDisabledView(geometry: geometry)
 
-                SwiftUIVideoView(localVideoTrack,
+                SwiftUIVideoView(_localVideoTrack,
                                  mirrorMode: .mirror)
                     .onAppear {
                         Task {
-                            try await localVideoTrack.start()
+                            try await _localVideoTrack.start()
                         }
                     }
                     .onDisappear {
                         Task {
-                            try await localVideoTrack.stop()
+                            try await _localVideoTrack.stop()
                         }
                     }
             }

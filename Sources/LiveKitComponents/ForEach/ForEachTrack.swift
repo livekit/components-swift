@@ -24,27 +24,29 @@ import SwiftUI
 ///
 /// > Note: References `Participant` environment object.
 public struct ForEachTrack<Content: View>: View {
+    // MARK: - Public types
+
     public enum Filter {
         case all
         case video
         case audio
     }
 
-    @EnvironmentObject var participant: Participant
+    @EnvironmentObject private var _participant: Participant
 
-    let filter: Filter
-    let content: TrackReferenceComponentBuilder<Content>
+    private let _filter: Filter
+    private let _content: TrackReferenceComponentBuilder<Content>
 
     public init(filter: Filter = .video,
                 @ViewBuilder content: @escaping TrackReferenceComponentBuilder<Content>)
     {
-        self.filter = filter
-        self.content = content
+        _filter = filter
+        _content = content
     }
 
-    private func computedTrackPublications() -> [TrackPublication] {
-        let trackPublications = Array(participant.trackPublications.values)
-        switch filter {
+    private func _computedTrackPublications() -> [TrackPublication] {
+        let trackPublications = Array(_participant.trackPublications.values)
+        switch _filter {
         case .all: return trackPublications
         case .video: return trackPublications.filter { $0.kind == .video }
         case .audio: return trackPublications.filter { $0.kind == .audio }
@@ -52,10 +54,10 @@ public struct ForEachTrack<Content: View>: View {
     }
 
     public var body: some View {
-        ForEach(computedTrackPublications()) { trackPublication in
-            let trackReference = TrackReference(participant: participant,
+        ForEach(_computedTrackPublications()) { trackPublication in
+            let trackReference = TrackReference(participant: _participant,
                                                 publication: trackPublication)
-            content(trackReference)
+            _content(trackReference)
                 .environmentObject(trackReference)
         }
     }

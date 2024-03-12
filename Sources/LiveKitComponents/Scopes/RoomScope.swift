@@ -18,18 +18,18 @@ import LiveKit
 import SwiftUI
 
 public struct RoomScope<Content: View>: View {
-    var content: () -> Content
-    let room: Room
+    private let _content: () -> Content
+    private let _room: Room
 
     public init(room: Room? = nil,
                 @ViewBuilder _ content: @escaping () -> Content)
     {
-        self.room = room ?? Room()
-        self.content = content
+        _room = room ?? Room()
+        _content = content
     }
 
     public var body: some View {
-        content()
-            .environmentObject(room)
+        _content()
+            .environmentObject(_room)
     }
 }

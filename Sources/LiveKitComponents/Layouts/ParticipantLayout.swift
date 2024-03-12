@@ -16,30 +16,28 @@
 
 import SwiftUI
 
-struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable, Data.Index: Hashable {
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
+public struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable, Data.Index: Hashable {
+    private let _data: Data
+    private let _spacing: CGFloat?
+    private let _viewBuilder: (Data.Element) -> Content
 
-    private let data: Data
-    private let spacing: CGFloat?
-    private let viewBuilder: (Data.Element) -> Content
-
-    private func data(at index: Int) -> Data.Element {
-        let dataIndex = data.index(data.startIndex, offsetBy: index)
-        return data[dataIndex]
+    private func _data(at index: Int) -> Data.Element {
+        let dataIndex = _data.index(_data.startIndex, offsetBy: index)
+        return _data[dataIndex]
     }
 
     public init(_ data: Data,
                 spacing: CGFloat? = nil,
                 content: @escaping (Data.Element) -> Content)
     {
-        self.data = data
-        viewBuilder = content
-        self.spacing = spacing
+        _data = data
+        _viewBuilder = content
+        _spacing = spacing
     }
 
-    private func computeColumn() -> (columns: [Int], rows: Int) {
-        let baseCount = Int(ceil(Double(data.count).squareRoot()))
-        let remainder = data.count % baseCount
+    private func _computeColumn() -> (columns: [Int], rows: Int) {
+        let baseCount = Int(ceil(Double(_data.count).squareRoot()))
+        let remainder = _data.count % baseCount
         let firstRowCount = remainder > 0 ? remainder : baseCount
         let rows = remainder > 0 ? baseCount : baseCount
 
@@ -49,16 +47,16 @@ struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: View wher
         return (columns: columns, rows: rows)
     }
 
-    var body: some View {
-        if data.count > 0 {
+    public var body: some View {
+        if _data.count > 0 {
             GeometryReader { _ in
-                let computed = computeColumn()
-                VStack(spacing: spacing) {
+                let computed = _computeColumn()
+                VStack(spacing: _spacing) {
                     ForEach(0 ..< computed.rows, id: \.self) { row in
-                        HStack(spacing: spacing) {
+                        HStack(spacing: _spacing) {
                             ForEach(0 ..< computed.columns[row], id: \.self) { column in
                                 let index = computed.columns.prefix(row).reduce(0, +) + column
-                                if index < data.count {
+                                if index < _data.count {
                                     ZStack(alignment: .center) {
                                         Color.white
                                         Text("\(index)")

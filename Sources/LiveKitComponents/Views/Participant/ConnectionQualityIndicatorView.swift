@@ -18,10 +18,10 @@ import LiveKit
 import SwiftUI
 
 public struct ConnectionQualityIndicatorView: View {
-    @EnvironmentObject var participant: Participant
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
+    @EnvironmentObject private var _participant: Participant
+    @Environment(\.liveKitUIOptions) private var _ui: UIOptions
 
     public var body: some View {
-        ui.connectionQualityIndicatorBuilder(connectionQuality: participant.connectionQuality)
+        _ui.connectionQualityIndicatorBuilder(connectionQuality: _participant.connectionQuality)
     }
 }

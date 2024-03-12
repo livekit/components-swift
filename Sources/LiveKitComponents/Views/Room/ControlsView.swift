@@ -17,23 +17,25 @@
 import SwiftUI
 
 public struct ControlsView: View {
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
+    @Environment(\.liveKitUIOptions) private var _ui: UIOptions
+
+    public init() {}
 
     public var body: some View {
         CameraToggleButton {
-            ui.enableCameraView()
+            _ui.enableCameraView()
         } published: {
-            ui.disableCameraView()
+            _ui.disableCameraView()
         }
 
         MicrophoneToggleButton {
-            ui.enableMicView()
+            _ui.enableMicView()
         } published: {
-            ui.disableMicView()
+            _ui.disableMicView()
         }
 
         DisconnectRoomButton {
-            ui.disconnectView()
+            _ui.disconnectView()
         }
     }
 }

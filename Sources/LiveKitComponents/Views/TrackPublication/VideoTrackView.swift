@@ -18,25 +18,32 @@ import LiveKit
 import SwiftUI
 
 public struct VideoTrackView: View {
-    @EnvironmentObject var trackReference: TrackReference
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
+    @EnvironmentObject var _trackReference: TrackReference
+    @Environment(\.liveKitUIOptions) var _ui: UIOptions
 
-    var layoutMode: VideoView.LayoutMode = .fill
-    var mirrorMode: VideoView.MirrorMode = .auto
+    private var _layoutMode: VideoView.LayoutMode
+    private var _mirrorMode: VideoView.MirrorMode
+
+    public init(layoutMode: VideoView.LayoutMode = .fill,
+                mirrorMode: VideoView.MirrorMode = .auto)
+    {
+        _layoutMode = layoutMode
+        _mirrorMode = mirrorMode
+    }
 
     public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                ui.videoDisabledView(geometry: geometry)
+                _ui.videoDisabledView(geometry: geometry)
 
-                if let trackPublication = trackReference.resolve(),
+                if let trackPublication = _trackReference.resolve(),
                    let track = trackPublication.track as? VideoTrack,
                    trackPublication.isSubscribed,
                    !trackPublication.isMuted
                 {
                     SwiftUIVideoView(track,
-                                     layoutMode: layoutMode,
-                                     mirrorMode: mirrorMode)
+                                     layoutMode: _layoutMode,
+                                     mirrorMode: _mirrorMode)
                 }
             }
         }

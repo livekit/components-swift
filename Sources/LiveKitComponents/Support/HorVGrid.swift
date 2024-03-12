@@ -17,25 +17,25 @@
 import SwiftUI
 
 public struct HorVGrid<Content: View>: View {
-    let axis: Axis
-    let spacing: CGFloat?
-    let content: () -> Content
+    private let _axis: Axis
+    private let _spacing: CGFloat?
+    private let _content: () -> Content
 
     public init(axis: Axis = .horizontal,
                 spacing: CGFloat? = nil,
                 @ViewBuilder content: @escaping () -> Content)
     {
-        self.axis = axis
-        self.spacing = spacing
-        self.content = content
+        _axis = axis
+        _spacing = spacing
+        _content = content
     }
 
     public var body: some View {
         Group {
-            if axis == .vertical {
-                LazyVGrid(columns: [GridItem(.flexible())], spacing: spacing, content: content)
+            if _axis == .vertical {
+                LazyVGrid(columns: [GridItem(.flexible())], spacing: _spacing, content: _content)
             } else {
-                LazyHGrid(rows: [GridItem(.flexible())], spacing: spacing, content: content)
+                LazyHGrid(rows: [GridItem(.flexible())], spacing: _spacing, content: _content)
             }
         }
     }

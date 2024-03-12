@@ -18,18 +18,17 @@ import LiveKit
 import SwiftUI
 
 public struct LocalCameraVideoView: View {
-    @EnvironmentObject var room: Room
-    @Environment(\.liveKitUIOptions) var ui: UIOptions
+    @EnvironmentObject private var _room: Room
+    @Environment(\.liveKitUIOptions) private var _ui: UIOptions
 
     public init() {}
 
     public var body: some View {
         GeometryReader { geometry in
-
             ZStack {
-                ui.videoDisabledView(geometry: geometry)
+                _ui.videoDisabledView(geometry: geometry)
 
-                if let track = room.localParticipant.firstCameraVideoTrack {
+                if let track = _room.localParticipant.firstCameraVideoTrack {
                     SwiftUIVideoView(track)
                 }
             }

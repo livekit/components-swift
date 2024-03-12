@@ -17,7 +17,7 @@
 import LiveKit
 import SwiftUI
 
-open class TrackReference: ObservableObject {
+public class TrackReference: ObservableObject {
     public let participant: Participant
     public let publication: TrackPublication?
     public let name: String?
