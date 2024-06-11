@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "LiveKitComponents",
     platforms: [
-        .iOS(.v14),
+        .iOS(.v13),
         .macOS(.v11),
         .macCatalyst(.v14),
     ],
