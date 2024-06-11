@@ -21,15 +21,47 @@ public struct RoomScope<Content: View>: View {
     private let _content: () -> Content
     private let _room: Room
 
+    private let _url: String?
+    private let _token: String?
+    private let _connect: Bool
+
+    private let _enableCamera: Bool
+    private let _enableMicrophone: Bool
+
     public init(room: Room? = nil,
+                url: String? = nil,
+                token: String? = nil,
+                connect: Bool = true,
+                enableCamera: Bool = false,
+                enableMicrophone: Bool = false,
+                roomOptions: RoomOptions? = nil,
                 @ViewBuilder _ content: @escaping () -> Content)
     {
-        _room = room ?? Room()
+        _room = room ?? Room(roomOptions: roomOptions)
+        _url = url
+        _token = token
+        _connect = connect
+        _enableCamera = enableCamera
+        _enableMicrophone = enableMicrophone
         _content = content
     }
 
     public var body: some View {
         _content()
             .environmentObject(_room)
+            .onAppear(perform: {
+                if _connect, let url = _url, let token = _token {
+                    Task {
+                        try await _room.connect(url: url, token: token)
+                        if _enableCamera { try await _room.localParticipant.setCamera(enabled: true) }
+                        if _enableMicrophone { try await _room.localParticipant.setMicrophone(enabled: true) }
+                    }
+                }
+            })
+            .onDisappear(perform: {
+                Task {
+                    await _room.disconnect()
+                }
+            })
     }
 }
