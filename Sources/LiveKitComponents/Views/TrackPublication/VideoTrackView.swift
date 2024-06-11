@@ -18,15 +18,17 @@ import LiveKit
 import SwiftUI
 
 public struct VideoTrackView: View {
-    @EnvironmentObject var _trackReference: TrackReference
     @Environment(\.liveKitUIOptions) var _ui: UIOptions
+    private let _trackReference: TrackReference
 
     private var _layoutMode: VideoView.LayoutMode
     private var _mirrorMode: VideoView.MirrorMode
 
-    public init(layoutMode: VideoView.LayoutMode = .fill,
+    public init(trackReference: TrackReference,
+                layoutMode: VideoView.LayoutMode = .fill,
                 mirrorMode: VideoView.MirrorMode = .auto)
     {
+        _trackReference = trackReference
         _layoutMode = layoutMode
         _mirrorMode = mirrorMode
     }
