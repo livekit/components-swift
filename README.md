@@ -14,7 +14,13 @@
 Use this SDK to add real-time video, audio and data features to your Swift app. By connecting to a self- or cloud-hosted <a href="https://livekit.io/">LiveKit</a> server, you can quickly build applications like interactive live streaming or video calls with just a few lines of code.
 <!--END_DESCRIPTION-->
 
-## [Docs](https://livekit.github.io/components-swift/documentation/livekitcomponents/)
+## Docs
+
+Docs and guides are at [https://docs.livekit.io](https://docs.livekit.io)
+
+## Example App
+
+See our [Meet Example app](https://github.com/livekit-examples/swift-components) for a simple conferencing app.
 
 <!--BEGIN_REPO_NAV-->
 <br/><table>
