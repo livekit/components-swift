@@ -22,6 +22,5 @@ public let liveKitComponentsVersion = "0.0.1"
 public typealias ComponentBuilder<Content: View> = () -> Content
 public typealias ParticipantComponentBuilder<Content: View> = (_: Participant) -> Content
 public typealias TrackReferenceComponentBuilder<Content: View> = (_: TrackReference) -> Content
-
 public typealias ParticipantLayoutBuilder<Content: View> = (_ participant: Participant,
                                                             _ geometry: GeometryProxy) -> Content
