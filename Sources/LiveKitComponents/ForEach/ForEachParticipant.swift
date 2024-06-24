@@ -34,17 +34,17 @@ public struct ForEachParticipant<Content: View>: View {
     // MARK: - Private
 
     /// Whether to include the local participant in the enumeration
-    private let _includeLocalParticipant: Bool
+    private let _includeLocal: Bool
     private let _filterMode: Filter
     private let _content: ParticipantComponentBuilder<Content>
 
     @EnvironmentObject private var _room: Room
 
-    public init(includeLocalParticipant: Bool = true,
+    public init(includeLocal: Bool = true,
                 filter: Filter = .all,
                 @ViewBuilder content: @escaping ParticipantComponentBuilder<Content>)
     {
-        _includeLocalParticipant = includeLocalParticipant
+        _includeLocal = includeLocal
         _filterMode = filter
         _content = content
     }
@@ -53,8 +53,10 @@ public struct ForEachParticipant<Content: View>: View {
         // Include LocalParticipant or not
         let participants: [Participant] = Array(_room.allParticipants.values).filter { participant in
             // Filter out LocalParticipant if not required
-            if !_includeLocalParticipant, participant is LocalParticipant { return false }
+            if !_includeLocal, participant is LocalParticipant { return false }
             if case .canPublishVideoOrAudio = _filterMode, !participant.permissions.canPublish { return false }
+            if case .isPublishingVideo = _filterMode, participant.videoTracks.isEmpty { return false }
+            if case .isPublishingAudio = _filterMode, participant.audioTracks.isEmpty { return false }
             return true
         }
 
