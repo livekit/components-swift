@@ -19,7 +19,7 @@ import SwiftUI
 
 public struct RoomScope<Content: View>: View {
     private let _content: () -> Content
-    private let _room: Room
+    @StateObject private var _room: Room
 
     private let _url: String?
     private let _token: String?
@@ -37,7 +37,7 @@ public struct RoomScope<Content: View>: View {
                 roomOptions: RoomOptions? = nil,
                 @ViewBuilder _ content: @escaping () -> Content)
     {
-        _room = room ?? Room(roomOptions: roomOptions)
+        __room = StateObject(wrappedValue: room ?? Room(roomOptions: roomOptions))
         _url = url
         _token = token
         _connect = connect
@@ -49,7 +49,7 @@ public struct RoomScope<Content: View>: View {
     public var body: some View {
         _content()
             .environmentObject(_room)
-            .onAppear(perform: {
+            .onAppear {
                 if _connect, let url = _url, let token = _token {
                     Task {
                         try await _room.connect(url: url, token: token)
@@ -57,11 +57,11 @@ public struct RoomScope<Content: View>: View {
                         if _enableMicrophone { try await _room.localParticipant.setMicrophone(enabled: true) }
                     }
                 }
-            })
-            .onDisappear(perform: {
+            }
+            .onDisappear {
                 Task {
                     await _room.disconnect()
                 }
-            })
+            }
     }
 }
