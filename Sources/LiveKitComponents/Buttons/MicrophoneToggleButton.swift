@@ -18,16 +18,19 @@ import LiveKit
 import SwiftUI
 
 public struct MicrophoneToggleButton<Label: View, PublishedLabel: View>: View {
-    @EnvironmentObject private var _room: Room
-    @State private var _isBusy = false
     private let _label: ComponentBuilder<Label>
     private let _publishedLabel: ComponentBuilder<PublishedLabel>
 
-    private var isMicrophoneEnabled: Bool {
+    @EnvironmentObject private var _room: Room
+    @State private var _isBusy = false
+
+    public var isMicrophoneEnabled: Bool {
         _room.localParticipant.isMicrophoneEnabled()
     }
 
-    public init(@ViewBuilder label: @escaping ComponentBuilder<Label>, @ViewBuilder published: @escaping ComponentBuilder<PublishedLabel>) {
+    public init(@ViewBuilder label: @escaping ComponentBuilder<Label>,
+                @ViewBuilder published: @escaping ComponentBuilder<PublishedLabel>)
+    {
         _label = label
         _publishedLabel = published
     }

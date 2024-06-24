@@ -32,10 +32,12 @@ public struct ForEachTrack<Content: View>: View {
         case audio
     }
 
-    @EnvironmentObject private var _participant: Participant
+    // MARK: - Private
 
     private let _filter: Filter
     private let _content: TrackReferenceComponentBuilder<Content>
+
+    @EnvironmentObject private var _participant: Participant
 
     public init(filter: Filter = .video,
                 @ViewBuilder content: @escaping TrackReferenceComponentBuilder<Content>)

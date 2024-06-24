@@ -21,11 +21,6 @@ public struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: Vi
     private let _spacing: CGFloat?
     private let _viewBuilder: (Data.Element) -> Content
 
-    private func _data(at index: Int) -> Data.Element {
-        let dataIndex = _data.index(_data.startIndex, offsetBy: index)
-        return _data[dataIndex]
-    }
-
     public init(_ data: Data,
                 spacing: CGFloat? = nil,
                 content: @escaping (Data.Element) -> Content)
@@ -33,18 +28,6 @@ public struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: Vi
         _data = data
         _viewBuilder = content
         _spacing = spacing
-    }
-
-    private func _computeColumn() -> (columns: [Int], rows: Int) {
-        let baseCount = Int(ceil(Double(_data.count).squareRoot()))
-        let remainder = _data.count % baseCount
-        let firstRowCount = remainder > 0 ? remainder : baseCount
-        let rows = remainder > 0 ? baseCount : baseCount
-
-        var columns = [Int]()
-        columns.append(firstRowCount)
-        columns.append(contentsOf: Array(repeating: baseCount, count: rows - 1))
-        return (columns: columns, rows: rows)
     }
 
     public var body: some View {
@@ -69,5 +52,24 @@ public struct ParticipantLayout<Data: RandomAccessCollection, Content: View>: Vi
                 }
             }
         }
+    }
+
+    // MARK: - Private
+
+    private func _data(at index: Int) -> Data.Element {
+        let dataIndex = _data.index(_data.startIndex, offsetBy: index)
+        return _data[dataIndex]
+    }
+
+    private func _computeColumn() -> (columns: [Int], rows: Int) {
+        let baseCount = Int(ceil(Double(_data.count).squareRoot()))
+        let remainder = _data.count % baseCount
+        let firstRowCount = remainder > 0 ? remainder : baseCount
+        let rows = remainder > 0 ? baseCount : baseCount
+
+        var columns = [Int]()
+        columns.append(firstRowCount)
+        columns.append(contentsOf: Array(repeating: baseCount, count: rows - 1))
+        return (columns: columns, rows: rows)
     }
 }

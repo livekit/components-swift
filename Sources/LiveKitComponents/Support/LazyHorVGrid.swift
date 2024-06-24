@@ -16,7 +16,7 @@
 
 import SwiftUI
 
-public struct HorVGrid<Content: View>: View {
+public struct LazyHorVGrid<Content: View>: View {
     private let _axis: Axis
     private let _spacing: CGFloat?
     private let _content: () -> Content

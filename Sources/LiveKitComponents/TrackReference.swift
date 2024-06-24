@@ -23,7 +23,13 @@ public class TrackReference: ObservableObject {
     public let name: String?
     public let source: Track.Source?
 
-    public init(participant: Participant, publication: TrackPublication? = nil, name: String? = nil, source: Track.Source? = nil) {
+    public var isResolvable: Bool { resolve() != nil }
+
+    public init(participant: Participant,
+                publication: TrackPublication? = nil,
+                name: String? = nil,
+                source: Track.Source? = nil)
+    {
         self.participant = participant
         self.publication = publication
         self.name = name
@@ -43,9 +49,5 @@ public class TrackReference: ObservableObject {
         }
 
         return nil
-    }
-
-    public var isResolvable: Bool {
-        resolve() != nil
     }
 }

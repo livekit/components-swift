@@ -18,8 +18,9 @@ import LiveKit
 import SwiftUI
 
 public struct DisconnectRoomButton<Label: View>: View {
-    @EnvironmentObject private var _room: Room
     private let _label: ComponentBuilder<Label>
+
+    @EnvironmentObject private var _room: Room
 
     public init(@ViewBuilder label: @escaping ComponentBuilder<Label>) {
         _label = label

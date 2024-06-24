@@ -31,12 +31,14 @@ public struct ForEachParticipant<Content: View>: View {
         case isPublishingAudio
     }
 
-    @EnvironmentObject private var _room: Room
+    // MARK: - Private
 
     /// Whether to include the local participant in the enumeration
     private let _includeLocalParticipant: Bool
     private let _filterMode: Filter
     private let _content: ParticipantComponentBuilder<Content>
+
+    @EnvironmentObject private var _room: Room
 
     public init(includeLocalParticipant: Bool = true,
                 filter: Filter = .all,

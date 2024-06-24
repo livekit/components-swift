@@ -18,9 +18,10 @@ import LiveKit
 import SwiftUI
 
 public struct ParticipantView: View {
+    private let _showInformation: Bool
+
     @EnvironmentObject private var _participant: Participant
     @Environment(\.liveKitUIOptions) private var _ui: UIOptions
-    private let _showInformation: Bool
 
     public init(showInformation: Bool = true) {
         _showInformation = showInformation
