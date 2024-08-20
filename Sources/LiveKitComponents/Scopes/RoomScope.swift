@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 public struct RoomScope<Content: View>: View {
-    private let _content: () -> Content
+    private let _content: (_: Room) -> Content
     @StateObject private var _room: Room
 
     private let _url: String?
@@ -35,7 +35,7 @@ public struct RoomScope<Content: View>: View {
                 enableCamera: Bool = false,
                 enableMicrophone: Bool = false,
                 roomOptions: RoomOptions? = nil,
-                @ViewBuilder _ content: @escaping () -> Content)
+                @ViewBuilder _ content: @escaping (_: Room) -> Content)
     {
         __room = StateObject(wrappedValue: room ?? Room(roomOptions: roomOptions))
         _url = url
@@ -46,8 +46,22 @@ public struct RoomScope<Content: View>: View {
         _content = content
     }
 
+    public init(room: Room? = nil,
+                url: String? = nil,
+                token: String? = nil,
+                connect: Bool = true,
+                enableCamera: Bool = false,
+                enableMicrophone: Bool = false,
+                roomOptions: RoomOptions? = nil,
+                @ViewBuilder _ content: @escaping () -> Content)
+    {
+        self.init { _ in
+            content()
+        }
+    }
+
     public var body: some View {
-        _content()
+        _content(_room)
             .environmentObject(_room)
             .onAppear {
                 if _connect, let url = _url, let token = _token {
