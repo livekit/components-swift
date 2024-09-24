@@ -19,16 +19,15 @@ import LiveKit
 import SwiftUI
 
 class AudioProcessor: ObservableObject, AudioRenderer {
-    // Published property to update the view
     private let _trackReference: TrackReference
 
+    // Normalized to 0.0-1.0 range.
     @Published var data: [Float] = []
-    var centeredBandCount: Int = 10
 
     private let processor: AudioVisualizeProcessor
 
-    init(trackReference: TrackReference, bandCount: Int) {
-        processor = AudioVisualizeProcessor(bandsCount: bandCount)
+    init(trackReference: TrackReference, bandCount: Int, isCentered: Bool) {
+        processor = AudioVisualizeProcessor(bandsCount: bandCount, isCentered: isCentered)
         _trackReference = trackReference
 
         if let track = _trackReference.resolve()?.track as? AudioTrack {
@@ -54,6 +53,7 @@ struct BarAudioVisualizer: View {
     public let barColor: Color
     public let barCornerRadius: CGFloat
     public let barSpacing: CGFloat
+    public let isCentered: Bool
 
     public let trackReference: TrackReference
 
@@ -62,17 +62,20 @@ struct BarAudioVisualizer: View {
     init(trackReference: TrackReference,
          barColor: Color = .white,
          barCount: Int = 5,
-         cornerRadius: CGFloat = 15,
-         barSpacing: CGFloat = 10)
+         barCornerRadius: CGFloat = 15,
+         barSpacing: CGFloat = 10,
+         isCentered: Bool = true)
     {
         self.trackReference = trackReference
         self.barColor = barColor
         self.barCount = barCount
-        barCornerRadius = cornerRadius
+        self.barCornerRadius = barCornerRadius
         self.barSpacing = barSpacing
+        self.isCentered = isCentered
 
         _observableAudioProcessor = AudioProcessor(trackReference: trackReference,
-                                                   bandCount: barCount)
+                                                   bandCount: barCount,
+                                                   isCentered: isCentered)
     }
 
     var body: some View {
