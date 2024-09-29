@@ -31,11 +31,16 @@ public struct ParticipantView: View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
                 let cameraReference = TrackReference(participant: _participant, source: .camera)
+                let microphoneReference = TrackReference(participant: _participant, source: .microphone)
 
                 if cameraReference.isResolvable {
                     VideoTrackView(trackReference: cameraReference)
                 } else {
-                    _ui.videoDisabledView(geometry: geometry)
+                    if microphoneReference.isResolvable {
+                        BarAudioVisualizer(trackReference: microphoneReference)
+                    } else {
+                        _ui.videoDisabledView(geometry: geometry)
+                    }
                 }
 
                 if _showInformation {
