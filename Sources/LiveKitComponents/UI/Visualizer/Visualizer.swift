@@ -52,7 +52,7 @@ struct BarAudioVisualizer: View {
     public let barCount: Int
     public let barColor: Color
     public let barCornerRadius: CGFloat
-    public let barSpacing: CGFloat
+    public let barSpacingFactor: CGFloat
     public let isCentered: Bool
 
     public let trackReference: TrackReference
@@ -63,14 +63,14 @@ struct BarAudioVisualizer: View {
          barColor: Color = .white,
          barCount: Int = 5,
          barCornerRadius: CGFloat = 15,
-         barSpacing: CGFloat = 10,
+         barSpacingFactor: CGFloat = 0.015,
          isCentered: Bool = true)
     {
         self.trackReference = trackReference
         self.barColor = barColor
         self.barCount = barCount
         self.barCornerRadius = barCornerRadius
-        self.barSpacing = barSpacing
+        self.barSpacingFactor = barSpacingFactor
         self.isCentered = isCentered
 
         _observableAudioProcessor = AudioProcessor(trackReference: trackReference,
@@ -79,9 +79,9 @@ struct BarAudioVisualizer: View {
     }
 
     var body: some View {
-        HStack(alignment: .center, spacing: barSpacing) {
+        GeometryReader { geometry in
+            HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
             ForEach(0 ..< _observableAudioProcessor.data.count, id: \.self) { index in
-                GeometryReader { geometry in
                     VStack {
                         Spacer()
                         RoundedRectangle(cornerRadius: barCornerRadius)
