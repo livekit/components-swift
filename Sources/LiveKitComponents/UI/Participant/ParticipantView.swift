@@ -33,10 +33,10 @@ public struct ParticipantView: View {
                 let cameraReference = TrackReference(participant: _participant, source: .camera)
                 let microphoneReference = TrackReference(participant: _participant, source: .microphone)
 
-                if cameraReference.isResolvable {
+                if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
                     VideoTrackView(trackReference: cameraReference)
                 } else {
-                    if microphoneReference.isResolvable {
+                    if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted {
                         BarAudioVisualizer(trackReference: microphoneReference)
                     } else {
                         _ui.videoDisabledView(geometry: geometry)

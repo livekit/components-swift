@@ -19,29 +19,25 @@ import LiveKit
 import SwiftUI
 
 class AudioProcessor: ObservableObject, AudioRenderer {
-    private let _trackReference: TrackReference
-
+    private weak var _track: AudioTrack?
     // Normalized to 0.0-1.0 range.
     @Published var data: [Float] = []
 
-    private let processor: AudioVisualizeProcessor
+    private let _processor: AudioVisualizeProcessor
 
-    init(trackReference: TrackReference, bandCount: Int, isCentered: Bool) {
-        processor = AudioVisualizeProcessor(bandsCount: bandCount, isCentered: isCentered)
-        _trackReference = trackReference
-
-        if let track = _trackReference.resolve()?.track as? AudioTrack {
-            track.add(audioRenderer: self)
-        }
+    init(track: AudioTrack?, bandCount: Int, isCentered: Bool) {
+        _processor = AudioVisualizeProcessor(bandsCount: bandCount, isCentered: isCentered)
+        _track = track
+        _track?.add(audioRenderer: self)
     }
 
     deinit {
-        // TODO: Remove
+        _track?.remove(audioRenderer: self)
     }
 
     func render(pcmBuffer: AVAudioPCMBuffer) {
-        processor.add(pcmBuffer: pcmBuffer)
-        let processedData = processor.bands ?? []
+        _processor.add(pcmBuffer: pcmBuffer)
+        let processedData = _processor.bands ?? []
         DispatchQueue.main.async { [weak self] in
             self?.data = processedData
         }
@@ -57,11 +53,11 @@ struct BarAudioVisualizer: View {
 
     public let trackReference: TrackReference
 
-    @ObservedObject private var _observableAudioProcessor: AudioProcessor
+    @StateObject private var audioProcessor: AudioProcessor
 
     init(trackReference: TrackReference,
          barColor: Color = .white,
-         barCount: Int = 5,
+         barCount: Int = 7,
          barCornerRadius: CGFloat = 15,
          barSpacingFactor: CGFloat = 0.015,
          isCentered: Bool = true)
@@ -73,20 +69,21 @@ struct BarAudioVisualizer: View {
         self.barSpacingFactor = barSpacingFactor
         self.isCentered = isCentered
 
-        _observableAudioProcessor = AudioProcessor(trackReference: trackReference,
-                                                   bandCount: barCount,
-                                                   isCentered: isCentered)
+        let track = trackReference.resolve()?.track as? AudioTrack
+        _audioProcessor = StateObject(wrappedValue: AudioProcessor(track: track,
+                                                                   bandCount: barCount,
+                                                                   isCentered: isCentered))
     }
 
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
-            ForEach(0 ..< _observableAudioProcessor.data.count, id: \.self) { index in
+                ForEach(0 ..< audioProcessor.data.count, id: \.self) { index in
                     VStack {
                         Spacer()
                         RoundedRectangle(cornerRadius: barCornerRadius)
-                            .fill(barColor.opacity(Double(_observableAudioProcessor.data[index]))) // Use normalized magnitude for opacity
-                            .frame(height: CGFloat(_observableAudioProcessor.data[index]) * geometry.size.height) // Magnitude determines height
+                            .fill(barColor.opacity(Double(audioProcessor.data[index])))
+                            .frame(height: CGFloat(audioProcessor.data[index]) * geometry.size.height)
                         Spacer()
                     }
                 }
