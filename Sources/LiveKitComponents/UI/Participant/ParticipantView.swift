@@ -36,8 +36,8 @@ public struct ParticipantView: View {
                 if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
                     VideoTrackView(trackReference: cameraReference)
                 } else {
-                    if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted {
-                        BarAudioVisualizer(trackReference: microphoneReference)
+                    if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted, let audioTrack = microphoneTrack.track as? AudioTrack {
+                        BarAudioVisualizer(audioTrack: audioTrack)
                     } else {
                         _ui.videoDisabledView(geometry: geometry)
                     }

@@ -21,7 +21,7 @@ import SwiftUI
 class AudioProcessor: ObservableObject, AudioRenderer {
     private weak var _track: AudioTrack?
     // Normalized to 0.0-1.0 range.
-    @Published var data: [Float] = []
+    @Published var bands: [Float] = []
 
     private let _processor: AudioVisualizeProcessor
 
@@ -36,10 +36,10 @@ class AudioProcessor: ObservableObject, AudioRenderer {
     }
 
     func render(pcmBuffer: AVAudioPCMBuffer) {
-        _processor.add(pcmBuffer: pcmBuffer)
-        let processedData = _processor.bands ?? []
+        let bands = _processor.process(pcmBuffer: pcmBuffer)
+        guard let bands else { return }
         DispatchQueue.main.async { [weak self] in
-            self?.data = processedData
+            self?.bands = bands
         }
     }
 }
@@ -51,26 +51,25 @@ struct BarAudioVisualizer: View {
     public let barSpacingFactor: CGFloat
     public let isCentered: Bool
 
-    public let trackReference: TrackReference
+    public let audioTrack: AudioTrack
 
     @StateObject private var audioProcessor: AudioProcessor
 
-    init(trackReference: TrackReference,
+    init(audioTrack: AudioTrack,
          barColor: Color = .white,
          barCount: Int = 7,
-         barCornerRadius: CGFloat = 15,
+         barCornerRadius: CGFloat = 100,
          barSpacingFactor: CGFloat = 0.015,
          isCentered: Bool = true)
     {
-        self.trackReference = trackReference
+        self.audioTrack = audioTrack
         self.barColor = barColor
         self.barCount = barCount
         self.barCornerRadius = barCornerRadius
         self.barSpacingFactor = barSpacingFactor
         self.isCentered = isCentered
 
-        let track = trackReference.resolve()?.track as? AudioTrack
-        _audioProcessor = StateObject(wrappedValue: AudioProcessor(track: track,
+        _audioProcessor = StateObject(wrappedValue: AudioProcessor(track: audioTrack,
                                                                    bandCount: barCount,
                                                                    isCentered: isCentered))
     }
@@ -78,12 +77,12 @@ struct BarAudioVisualizer: View {
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
-                ForEach(0 ..< audioProcessor.data.count, id: \.self) { index in
+                ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
                     VStack {
                         Spacer()
                         RoundedRectangle(cornerRadius: barCornerRadius)
-                            .fill(barColor.opacity(Double(audioProcessor.data[index])))
-                            .frame(height: CGFloat(audioProcessor.data[index]) * geometry.size.height)
+                            .fill(barColor.opacity(Double(audioProcessor.bands[index])))
+                            .frame(height: CGFloat(audioProcessor.bands[index]) * geometry.size.height)
                         Spacer()
                     }
                 }
