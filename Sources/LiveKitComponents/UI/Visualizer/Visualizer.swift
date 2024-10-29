@@ -20,13 +20,24 @@ import SwiftUI
 
 class AudioProcessor: ObservableObject, AudioRenderer {
     private weak var _track: AudioTrack?
+    private let isCentered: Bool
+    public let smoothingFactor: Float
+
     // Normalized to 0.0-1.0 range.
-    @Published var bands: [Float] = []
+    @Published var bands: [Float]
 
     private let _processor: AudioVisualizeProcessor
 
-    init(track: AudioTrack?, bandCount: Int, isCentered: Bool) {
-        _processor = AudioVisualizeProcessor(bandsCount: bandCount, isCentered: isCentered)
+    init(track: AudioTrack?,
+         bandCount: Int,
+         isCentered: Bool = true,
+         smoothingFactor: Float = 0.3)
+    {
+        self.isCentered = isCentered
+        self.smoothingFactor = smoothingFactor
+        bands = Array(repeating: 0.0, count: bandCount)
+
+        _processor = AudioVisualizeProcessor(bandsCount: bandCount)
         _track = track
         _track?.add(audioRenderer: self)
     }
@@ -36,11 +47,60 @@ class AudioProcessor: ObservableObject, AudioRenderer {
     }
 
     func render(pcmBuffer: AVAudioPCMBuffer) {
-        let bands = _processor.process(pcmBuffer: pcmBuffer)
-        guard let bands else { return }
-        DispatchQueue.main.async { [weak self] in
-            self?.bands = bands
+        let newBands = _processor.process(pcmBuffer: pcmBuffer)
+        guard var newBands else { return }
+
+        // If centering is enabled, rearrange the normalized bands
+        if isCentered {
+            newBands.sort(by: >)
+            newBands = centerBands(newBands)
         }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            self.bands = zip(self.bands, newBands).map { old, new in
+                self._smoothTransition(from: old, to: new, factor: self.smoothingFactor)
+            }
+        }
+    }
+
+    // MARK: - Private
+
+    /// Centers the sorted bands by placing higher values in the middle.
+    @inline(__always) private func centerBands(_ sortedBands: [Float]) -> [Float] {
+        var centeredBands = [Float](repeating: 0, count: sortedBands.count)
+        var leftIndex = sortedBands.count / 2
+        var rightIndex = leftIndex
+
+        for (index, value) in sortedBands.enumerated() {
+            if index % 2 == 0 {
+                // Place value to the right
+                centeredBands[rightIndex] = value
+                rightIndex += 1
+            } else {
+                // Place value to the left
+                leftIndex -= 1
+                centeredBands[leftIndex] = value
+            }
+        }
+
+        return centeredBands
+    }
+
+    /// Applies an easing function to smooth the transition.
+    @inline(__always) private func _smoothTransition(from oldValue: Float, to newValue: Float, factor: Float) -> Float {
+        // Calculate the delta change between the old and new value
+        let delta = newValue - oldValue
+        // Apply an ease-in-out cubic easing curve
+        let easedFactor = _easeInOutCubic(t: factor)
+        // Calculate and return the smoothed value
+        return oldValue + delta * easedFactor
+    }
+
+    /// Easing function: ease-in-out cubic
+    @inline(__always) private func _easeInOutCubic(t: Float) -> Float {
+        t < 0.5 ? 4 * t * t * t : 1 - pow(-2 * t + 2, 3) / 2
     }
 }
 
