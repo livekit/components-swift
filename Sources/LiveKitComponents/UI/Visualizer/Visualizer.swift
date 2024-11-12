@@ -104,6 +104,36 @@ class AudioProcessor: ObservableObject, AudioRenderer {
     }
 }
 
+/// A SwiftUI view that visualizes audio levels as a series of vertical bars,
+/// responding to real-time audio data processed from an audio track.
+///
+/// `BarAudioVisualizer` displays bars whose heights and opacities dynamically
+/// reflect the magnitude of audio frequencies in real time, creating an
+/// interactive, visual representation of the audio track's spectrum. This
+/// visualizer can be customized in terms of bar count, color, corner radius,
+/// spacing, and whether the bars are centered based on frequency magnitude.
+///
+/// Usage:
+/// ```
+/// let audioTrack: AudioTrack = ...
+/// BarAudioVisualizer(audioTrack: audioTrack)
+/// ```
+///
+/// - Parameters:
+///   - audioTrack: The `AudioTrack` providing audio data to be visualized.
+///   - barColor: The color used to fill each bar, defaulting to white.
+///   - barCount: The number of bars displayed, defaulting to 7.
+///   - barCornerRadius: The corner radius applied to each bar, giving a
+///     rounded appearance. Defaults to 100.
+///   - barSpacingFactor: Determines the spacing between bars as a factor
+///     of view width. Defaults to 0.015.
+///   - isCentered: A Boolean indicating whether higher-decibel bars
+///     should be centered. Defaults to `true`.
+///
+/// Example:
+/// ```
+/// BarAudioVisualizer(audioTrack: audioTrack, barColor: .blue, barCount: 10)
+/// ```
 struct BarAudioVisualizer: View {
     public let barCount: Int
     public let barColor: Color
