@@ -151,7 +151,7 @@ struct BarAudioVisualizer: View {
          barCount: Int = 7,
          barCornerRadius: CGFloat = 100,
          barSpacingFactor: CGFloat = 0.015,
-         barMinOpacity: CGFloat = 0.1,
+         barMinOpacity: CGFloat = 0.35,
          isCentered: Bool = true)
     {
         self.audioTrack = audioTrack
