@@ -139,6 +139,7 @@ struct BarAudioVisualizer: View {
     public let barColor: Color
     public let barCornerRadius: CGFloat
     public let barSpacingFactor: CGFloat
+    public let barMinOpacity: Double
     public let isCentered: Bool
 
     public let audioTrack: AudioTrack
@@ -150,6 +151,7 @@ struct BarAudioVisualizer: View {
          barCount: Int = 7,
          barCornerRadius: CGFloat = 100,
          barSpacingFactor: CGFloat = 0.015,
+         barMinOpacity: CGFloat = 0.1,
          isCentered: Bool = true)
     {
         self.audioTrack = audioTrack
@@ -157,6 +159,7 @@ struct BarAudioVisualizer: View {
         self.barCount = barCount
         self.barCornerRadius = barCornerRadius
         self.barSpacingFactor = barSpacingFactor
+        self.barMinOpacity = Double(barMinOpacity)
         self.isCentered = isCentered
 
         _audioProcessor = StateObject(wrappedValue: AudioProcessor(track: audioTrack,
@@ -166,18 +169,19 @@ struct BarAudioVisualizer: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let barMinHeight = (CGFloat(geometry.size.width) - CGFloat(geometry.size.width * barSpacingFactor) * CGFloat(barCount + 2)) / CGFloat(barCount)
             HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
                 ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
                     VStack {
                         Spacer()
-                        RoundedRectangle(cornerRadius: barCornerRadius)
-                            .fill(barColor.opacity(Double(audioProcessor.bands[index])))
-                            .frame(height: CGFloat(audioProcessor.bands[index]) * geometry.size.height)
+                        RoundedRectangle(cornerRadius: barMinHeight)
+                            .fill(barColor.opacity(Double(1.0 - barMinOpacity) * Double(audioProcessor.bands[index]) + barMinOpacity))
+                            .frame(height: ((geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index])) + barMinHeight)
                         Spacer()
                     }
                 }
             }
+            .padding(geometry.size.width * barSpacingFactor)
         }
-        .padding()
     }
 }
