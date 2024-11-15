@@ -18,20 +18,20 @@ import AVFoundation
 import LiveKit
 import SwiftUI
 
-class AudioProcessor: ObservableObject, AudioRenderer {
-    private weak var _track: AudioTrack?
-    private let isCentered: Bool
+public class AudioProcessor: ObservableObject, AudioRenderer {
+    public let isCentered: Bool
     public let smoothingFactor: Float
 
     // Normalized to 0.0-1.0 range.
-    @Published var bands: [Float]
+    @Published public var bands: [Float]
 
     private let _processor: AudioVisualizeProcessor
+    private weak var _track: AudioTrack?
 
-    init(track: AudioTrack?,
-         bandCount: Int,
-         isCentered: Bool = true,
-         smoothingFactor: Float = 0.3)
+    public init(track: AudioTrack?,
+                bandCount: Int,
+                isCentered: Bool = true,
+                smoothingFactor: Float = 0.3)
     {
         self.isCentered = isCentered
         self.smoothingFactor = smoothingFactor
@@ -46,7 +46,7 @@ class AudioProcessor: ObservableObject, AudioRenderer {
         _track?.remove(audioRenderer: self)
     }
 
-    func render(pcmBuffer: AVAudioPCMBuffer) {
+    public func render(pcmBuffer: AVAudioPCMBuffer) {
         let newBands = _processor.process(pcmBuffer: pcmBuffer)
         guard var newBands else { return }
 
@@ -134,29 +134,32 @@ class AudioProcessor: ObservableObject, AudioRenderer {
 /// ```
 /// BarAudioVisualizer(audioTrack: audioTrack, barColor: .blue, barCount: 10)
 /// ```
-struct BarAudioVisualizer: View {
+public struct BarAudioVisualizer: View {
     public let barCount: Int
     public let barColor: Color
     public let barCornerRadius: CGFloat
     public let barSpacingFactor: CGFloat
+    public let barMinOpacity: Double
     public let isCentered: Bool
 
     public let audioTrack: AudioTrack
 
     @StateObject private var audioProcessor: AudioProcessor
 
-    init(audioTrack: AudioTrack,
-         barColor: Color = .white,
-         barCount: Int = 7,
-         barCornerRadius: CGFloat = 100,
-         barSpacingFactor: CGFloat = 0.015,
-         isCentered: Bool = true)
+    public init(audioTrack: AudioTrack,
+                barColor: Color = .white,
+                barCount: Int = 7,
+                barCornerRadius: CGFloat = 100,
+                barSpacingFactor: CGFloat = 0.015,
+                barMinOpacity: CGFloat = 0.35,
+                isCentered: Bool = true)
     {
         self.audioTrack = audioTrack
         self.barColor = barColor
         self.barCount = barCount
         self.barCornerRadius = barCornerRadius
         self.barSpacingFactor = barSpacingFactor
+        self.barMinOpacity = Double(barMinOpacity)
         self.isCentered = isCentered
 
         _audioProcessor = StateObject(wrappedValue: AudioProcessor(track: audioTrack,
@@ -164,20 +167,21 @@ struct BarAudioVisualizer: View {
                                                                    isCentered: isCentered))
     }
 
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
+            let barMinHeight = (geometry.size.width - geometry.size.width * barSpacingFactor * CGFloat(barCount + 2)) / CGFloat(barCount)
             HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
                 ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
                     VStack {
                         Spacer()
-                        RoundedRectangle(cornerRadius: barCornerRadius)
-                            .fill(barColor.opacity(Double(audioProcessor.bands[index])))
-                            .frame(height: CGFloat(audioProcessor.bands[index]) * geometry.size.height)
+                        RoundedRectangle(cornerRadius: barMinHeight)
+                            .fill(barColor.opacity((1.0 - barMinOpacity) * Double(audioProcessor.bands[index]) + barMinOpacity))
+                            .frame(height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight)
                         Spacer()
                     }
                 }
             }
+            .padding(geometry.size.width * barSpacingFactor)
         }
-        .padding()
     }
 }
