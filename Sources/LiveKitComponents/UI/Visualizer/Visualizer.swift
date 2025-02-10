@@ -135,26 +135,23 @@ public class AudioProcessor: ObservableObject, AudioRenderer {
 /// BarAudioVisualizer(audioTrack: audioTrack, barColor: .blue, barCount: 10)
 /// ```
 public struct BarAudioVisualizer: View {
-    public let barCount: Int
     public let barColor: Color
+    public let barCount: Int
     public let barCornerRadius: CGFloat
     public let barSpacingFactor: CGFloat
     public let barMinOpacity: Double
     public let isCentered: Bool
 
-    public let audioTrack: AudioTrack
-
     @StateObject private var audioProcessor: AudioProcessor
 
-    public init(audioTrack: AudioTrack,
-                barColor: Color = .white,
-                barCount: Int = 7,
+    public init(audioTrack: AudioTrack?,
+                barColor: Color = .primary,
+                barCount: Int = 5,
                 barCornerRadius: CGFloat = 100,
                 barSpacingFactor: CGFloat = 0.015,
                 barMinOpacity: CGFloat = 0.35,
                 isCentered: Bool = true)
     {
-        self.audioTrack = audioTrack
         self.barColor = barColor
         self.barCount = barCount
         self.barCornerRadius = barCornerRadius
