@@ -150,6 +150,7 @@ public struct BarAudioVisualizer: View {
 
     @State private var animationProperties: PhaseAnimationProperties
     @State private var animationPhase: Int = 0
+    @State private var animationTask: Task<Void, Never>?
 
     public init(audioTrack: AudioTrack?,
                 agentState: AgentState? = nil,
@@ -179,24 +180,25 @@ public struct BarAudioVisualizer: View {
 
     public var body: some View {
         GeometryReader { geometry in
-            let duration = animationProperties.duration(agentState: agentState)
             let highlightingSequence = animationProperties.highlightingSequence(agentState: agentState)
             if #available(iOS 17.0, *) {
                 PhaseAnimator(highlightingSequence) { highlighted in
                     bars(geometry: geometry, highlighted: highlighted)
-                } animation: { _ in
-                    .easeInOut(duration: duration)
                 }
             } else {
                 let highlighted = highlightingSequence[animationPhase % highlightingSequence.count]
+                let duration = animationProperties.duration(agentState: agentState)
                 bars(geometry: geometry, highlighted: highlighted)
                     .onAppear {
-                        Task {
+                        animationTask = Task {
                             while !Task.isCancelled {
                                 try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
-                                withAnimation(.easeInOut(duration: duration)) { animationPhase += 1 }
+                                withAnimation { animationPhase += 1 }
                             }
                         }
+                    }
+                    .onDisappear {
+                        animationTask?.cancel()
                     }
                     .onChange(of: agentState) { _ in
                         animationPhase = 0
@@ -239,17 +241,17 @@ private struct PhaseAnimationProperties {
             .speaking: 1000,
         ]
         sequences = [
+            .thinking: Self.generateListeningSequence(barCount: barCount),
             .connecting: Self.generateConnectingSequence(barCount: barCount),
-            .initializing: Self.generateThinkingSequence(barCount: barCount),
+            .initializing: Self.generateConnectingSequence(barCount: barCount),
             .listening: Self.generateListeningSequence(barCount: barCount),
-            .thinking: Self.generateThinkingSequence(barCount: barCount),
             .speaking: Self.generateSpeakingSequence(barCount: barCount),
         ]
     }
 
     func duration(agentState: AgentState?) -> TimeInterval {
-        guard let agentState else { return 1 }
-        return durations[agentState] ?? 1
+        guard let agentState else { return 1000 }
+        return durations[agentState] ?? 1000
     }
 
     func highlightingSequence(agentState: AgentState?) -> [HighlightedBars] {
