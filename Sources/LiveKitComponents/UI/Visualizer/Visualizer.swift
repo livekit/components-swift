@@ -147,7 +147,7 @@ public struct BarAudioVisualizer: View {
     public let agentState: AgentState?
 
     @StateObject private var audioProcessor: AudioProcessor
-    
+
     @State private var animationProperties: PhaseAnimationProperties
     @State private var animationPhase: Int = 0
 
@@ -162,7 +162,7 @@ public struct BarAudioVisualizer: View {
     {
         self.audioTrack = audioTrack
         self.agentState = agentState
-        
+
         self.barColor = barColor
         self.barCount = barCount
         self.barCornerRadius = barCornerRadius
@@ -173,107 +173,104 @@ public struct BarAudioVisualizer: View {
         _audioProcessor = StateObject(wrappedValue: AudioProcessor(track: audioTrack,
                                                                    bandCount: barCount,
                                                                    isCentered: isCentered))
-        
+
         animationProperties = PhaseAnimationProperties(barCount: barCount)
     }
 
     public var body: some View {
         GeometryReader { geometry in
-                let duration = animationProperties.duration(agentState: agentState)
-                let highlightingSequence = animationProperties.highlightingSequence(agentState: agentState)
-                if #available(iOS 17.0, *) {
-                    PhaseAnimator(highlightingSequence) { highlighted in
-                        bars(geometry: geometry, highlighted: highlighted)
-                    } animation: { _ in
-                        .easeInOut(duration: duration)
-                    }
-                } else {
-                    let highlighted = highlightingSequence[animationPhase % highlightingSequence.count]
+            let duration = animationProperties.duration(agentState: agentState)
+            let highlightingSequence = animationProperties.highlightingSequence(agentState: agentState)
+            if #available(iOS 17.0, *) {
+                PhaseAnimator(highlightingSequence) { highlighted in
                     bars(geometry: geometry, highlighted: highlighted)
-                        .onAppear {
-                            Task {
-                                while !Task.isCancelled {
-                                    try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
-                                    withAnimation(.easeInOut(duration: duration)) { animationPhase += 1 }
-                                }
+                } animation: { _ in
+                    .easeInOut(duration: duration)
+                }
+            } else {
+                let highlighted = highlightingSequence[animationPhase % highlightingSequence.count]
+                bars(geometry: geometry, highlighted: highlighted)
+                    .onAppear {
+                        Task {
+                            while !Task.isCancelled {
+                                try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
+                                withAnimation(.easeInOut(duration: duration)) { animationPhase += 1 }
                             }
                         }
-                        .onChange(of: agentState) { _ in
-                            animationPhase = 0
-                        }
-                }
+                    }
+                    .onChange(of: agentState) { _ in
+                        animationPhase = 0
+                    }
+            }
         }
     }
 
     @ViewBuilder
     private func bars(geometry: GeometryProxy, highlighted: PhaseAnimationProperties.HighlightedBars) -> some View {
         let barMinHeight = (geometry.size.width - geometry.size.width * barSpacingFactor * CGFloat(barCount + 2)) / CGFloat(barCount)
-                        HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
-                            ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
-                                VStack {
-                                    Spacer()
-                                    RoundedRectangle(cornerRadius: barMinHeight)
-                                        .fill(barColor)
-                                        .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
-                                        .frame(height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight)
-                                    Spacer()
-                                }
-                            }
-                        }
-                        .padding(geometry.size.width * barSpacingFactor)
+        HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
+            ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
+                VStack {
+                    Spacer()
+                    RoundedRectangle(cornerRadius: barMinHeight)
+                        .fill(barColor)
+                        .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
+                        .frame(height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight)
+                    Spacer()
+                }
+            }
+        }
+        .padding(geometry.size.width * barSpacingFactor)
     }
 }
 
 private struct PhaseAnimationProperties {
     typealias HighlightedBars = Set<Int>
-    
-    private let barCount: Int
-    
-    private let connectingSequence: [HighlightedBars]
-    private let thinkingSequence: [HighlightedBars]
-    private let listeningSequence: [HighlightedBars]
-    
+
+    private let durations: [AgentState: TimeInterval]
+    private let sequences: [AgentState: [HighlightedBars]]
+
     init(barCount: Int) {
-        self.barCount = barCount
-        connectingSequence = Self.generateConnectingSequence(barCount: barCount)
-        thinkingSequence = Self.generateThinkingSequence(barCount: barCount)
-        listeningSequence = Self.generateListeningSequence(barCount: barCount)
+        durations = [
+            .connecting: 2 / Double(barCount),
+            .initializing: 2,
+            .listening: 0.5,
+            .thinking: 0.15,
+            .speaking: 1000,
+        ]
+        sequences = [
+            .connecting: Self.generateConnectingSequence(barCount: barCount),
+            .initializing: Self.generateThinkingSequence(barCount: barCount),
+            .listening: Self.generateListeningSequence(barCount: barCount),
+            .thinking: Self.generateThinkingSequence(barCount: barCount),
+            .speaking: Self.generateSpeakingSequence(barCount: barCount),
+        ]
     }
-    
+
     func duration(agentState: AgentState?) -> TimeInterval {
-        switch agentState {
-        case .connecting: return 2 / Double(barCount)
-        case .initializing: return 2
-        case .listening: return 0.5
-        case .thinking: return 0.15
-        default: return 1
-        }
+        guard let agentState else { return 1 }
+        return durations[agentState] ?? 1
     }
-    
+
     func highlightingSequence(agentState: AgentState?) -> [HighlightedBars] {
-        switch agentState {
-        case .connecting: return connectingSequence
-        case .initializing: return thinkingSequence
-        case .listening: return listeningSequence
-        case .thinking: return thinkingSequence
-        default: return [[]]
-        }
+        guard let agentState else { return [[]] }
+        return sequences[agentState] ?? [[]]
     }
-    
+
     private static func generateConnectingSequence(barCount: Int) -> [HighlightedBars] {
         var seq: [HighlightedBars] = []
-        for x in 0..<barCount {
+        for x in 0 ..< barCount {
             seq.append(HighlightedBars([x, barCount - 1 - x]))
         }
         return seq
     }
-    
+
     private static func generateThinkingSequence(barCount: Int) -> [HighlightedBars] {
         var seq: [HighlightedBars] = []
-        for x in 0..<barCount {
+        for x in 0 ..< barCount {
             seq.append([x])
         }
-        for x in (0..<barCount).reversed() {
+        for x in (0 ..< barCount).reversed() {
             seq.append([x])
         }
         return seq
@@ -282,5 +279,9 @@ private struct PhaseAnimationProperties {
     private static func generateListeningSequence(barCount: Int) -> [HighlightedBars] {
         let center = barCount / 2
         return [[center], []]
+    }
+
+    private static func generateSpeakingSequence(barCount: Int) -> [HighlightedBars] {
+        [Set(Array(0 ..< barCount))]
     }
 }
