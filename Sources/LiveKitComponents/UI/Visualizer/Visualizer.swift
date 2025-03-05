@@ -186,6 +186,8 @@ public struct BarAudioVisualizer: View {
 
             bars(geometry: geometry, highlighted: highlighted)
                 .onAppear {
+                    guard agentState != nil else { return }
+
                     animationTask?.cancel()
                     animationTask = Task {
                         while !Task.isCancelled {
