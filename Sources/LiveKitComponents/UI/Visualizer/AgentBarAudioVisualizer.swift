@@ -74,7 +74,7 @@ public struct AgentBarAudioVisualizer: View {
     public let isCentered: Bool
 
     public let audioTrack: AudioTrack?
-    public let agentState: AgentState?
+    public let agentState: AgentState
 
     @StateObject private var audioProcessor: AudioProcessor
 
@@ -84,8 +84,8 @@ public struct AgentBarAudioVisualizer: View {
 
     public init(audioTrack: AudioTrack?,
                 agentState: AgentState,
-                barColor: Color = .white,
-                barCount: Int = 7,
+                barColor: Color = .primary,
+                barCount: Int = 5,
                 barCornerRadius: CGFloat = 100,
                 barSpacingFactor: CGFloat = 0.015,
                 barMinOpacity: CGFloat = 0.16,
@@ -116,8 +116,6 @@ public struct AgentBarAudioVisualizer: View {
 
             bars(geometry: geometry, highlighted: highlighted)
                 .onAppear {
-                    guard agentState != nil else { return }
-
                     animationTask?.cancel()
                     animationTask = Task {
                         while !Task.isCancelled {
@@ -180,14 +178,12 @@ extension AgentBarAudioVisualizer {
             ]
         }
 
-        func duration(agentState: AgentState?) -> TimeInterval {
-            guard let agentState else { return veryLongDuration }
-            return durations[agentState] ?? veryLongDuration
+        func duration(agentState: AgentState) -> TimeInterval {
+            durations[agentState] ?? veryLongDuration
         }
 
-        func highlightingSequence(agentState: AgentState?) -> [HighlightedBars] {
-            guard let agentState else { return [[]] }
-            return sequences[agentState] ?? [[]]
+        func highlightingSequence(agentState: AgentState) -> [HighlightedBars] {
+            sequences[agentState] ?? [[]]
         }
 
         private static func generateConnectingSequence(barCount: Int) -> [HighlightedBars] {

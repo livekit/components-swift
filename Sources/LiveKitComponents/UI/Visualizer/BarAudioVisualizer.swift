@@ -62,7 +62,7 @@ public struct BarAudioVisualizer: View {
                 barCount: Int = 5,
                 barCornerRadius: CGFloat = 100,
                 barSpacingFactor: CGFloat = 0.015,
-                barMinOpacity: CGFloat = 0.35,
+                barMinOpacity: CGFloat = 0.16,
                 isCentered: Bool = true)
     {
         self.barColor = barColor
