@@ -75,7 +75,6 @@ public struct AgentBarAudioVisualizer: View {
     public let barMinOpacity: Double
     public let isCentered: Bool
 
-    public let audioTrack: AudioTrack?
     public let agentState: AgentState
 
     @StateObject private var audioProcessor: AudioProcessor
@@ -93,7 +92,6 @@ public struct AgentBarAudioVisualizer: View {
                 barMinOpacity: CGFloat = 0.16,
                 isCentered: Bool = true)
     {
-        self.audioTrack = audioTrack
         self.agentState = agentState
 
         self.barColor = barColor
