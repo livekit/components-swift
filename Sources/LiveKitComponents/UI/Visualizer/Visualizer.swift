@@ -186,6 +186,7 @@ public struct BarAudioVisualizer: View {
 
             bars(geometry: geometry, highlighted: highlighted)
                 .onAppear {
+                    animationTask?.cancel()
                     animationTask = Task {
                         while !Task.isCancelled {
                             try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
@@ -195,6 +196,9 @@ public struct BarAudioVisualizer: View {
                 }
                 .onDisappear {
                     animationTask?.cancel()
+                }
+                .onChange(of: agentState) { _ in
+                    withAnimation { animationPhase = 0 }
                 }
         }
     }
@@ -225,26 +229,28 @@ extension BarAudioVisualizer {
         private let durations: [AgentState: TimeInterval]
         private let sequences: [AgentState: [HighlightedBars]]
 
+        private let veryLongDuration: TimeInterval = 1000
+
         init(barCount: Int) {
             durations = [
                 .connecting: 2 / Double(barCount),
                 .initializing: 2 / Double(barCount),
                 .listening: 0.5,
                 .thinking: 0.15,
-                .speaking: 1000,
+                .speaking: veryLongDuration,
             ]
             sequences = [
-                .thinking: Self.generateListeningSequence(barCount: barCount),
                 .connecting: Self.generateConnectingSequence(barCount: barCount),
                 .initializing: Self.generateConnectingSequence(barCount: barCount),
                 .listening: Self.generateListeningSequence(barCount: barCount),
+                .thinking: Self.generateThinkingSequence(barCount: barCount),
                 .speaking: Self.generateSpeakingSequence(barCount: barCount),
             ]
         }
 
         func duration(agentState: AgentState?) -> TimeInterval {
-            guard let agentState else { return 1000 }
-            return durations[agentState] ?? 1000
+            guard let agentState else { return veryLongDuration }
+            return durations[agentState] ?? veryLongDuration
         }
 
         func highlightingSequence(agentState: AgentState?) -> [HighlightedBars] {
@@ -253,31 +259,19 @@ extension BarAudioVisualizer {
         }
 
         private static func generateConnectingSequence(barCount: Int) -> [HighlightedBars] {
-            var seq: [HighlightedBars] = []
-            for i in 0 ..< barCount {
-                seq.append(HighlightedBars([i, barCount - 1 - i]))
-            }
-            return seq
+            (0 ..< barCount).map { HighlightedBars([$0, barCount - 1 - $0]) }
         }
 
         private static func generateThinkingSequence(barCount: Int) -> [HighlightedBars] {
-            var seq: [HighlightedBars] = []
-            for i in 0 ..< barCount {
-                seq.append([i])
-            }
-            for i in (0 ..< barCount).reversed() {
-                seq.append([i])
-            }
-            return seq
+            Array((0 ..< barCount) + (0 ..< barCount).reversed()).map { HighlightedBars([$0]) }
         }
 
         private static func generateListeningSequence(barCount: Int) -> [HighlightedBars] {
-            let center = barCount / 2
-            return [[center], []]
+            [[barCount / 2], []]
         }
 
         private static func generateSpeakingSequence(barCount: Int) -> [HighlightedBars] {
-            [Set(Array(0 ..< barCount))]
+            [HighlightedBars(Array(0 ..< barCount))]
         }
     }
 }
