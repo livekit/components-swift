@@ -33,10 +33,12 @@
 import LiveKit
 import SwiftUI
 
-/// A SwiftUI view that visualizes audio levels as a series of vertical bars,
-/// responding to real-time audio data processed from an audio track.
+/// A SwiftUI view that visualizes audio levels and agent states as a series of animated vertical bars.
+/// This visualizer is specifically designed to provide visual feedback for different agent states
+/// (connecting, initializing, listening, thinking, speaking) while also responding to real-time
+/// audio data when available.
 ///
-/// `BarAudioVisualizer` displays bars whose heights and opacities dynamically
+/// `AgentBarAudioVisualizer` displays bars whose heights and opacities dynamically
 /// reflect the magnitude of audio frequencies in real time, creating an
 /// interactive, visual representation of the audio track's spectrum. This
 /// visualizer can be customized in terms of bar count, color, corner radius,
@@ -63,7 +65,7 @@ import SwiftUI
 ///
 /// Example:
 /// ```
-/// BarAudioVisualizer(audioTrack: audioTrack, barColor: .blue, barCount: 10)
+/// AgentBarAudioVisualizer(audioTrack: audioTrack, barColor: .blue, barCount: 10)
 /// ```
 public struct AgentBarAudioVisualizer: View {
     public let barCount: Int
