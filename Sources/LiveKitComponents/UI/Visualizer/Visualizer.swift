@@ -267,11 +267,11 @@ extension BarAudioVisualizer {
         }
 
         private static func generateListeningSequence(barCount: Int) -> [HighlightedBars] {
-            [[barCount / 2], []]
+            barCount % 2 == 0 ? [[(barCount / 2) - 1, barCount / 2], []] : [[barCount / 2], []]
         }
 
         private static func generateSpeakingSequence(barCount: Int) -> [HighlightedBars] {
-            [HighlightedBars(Array(0 ..< barCount))]
+            [HighlightedBars(0 ..< barCount)]
         }
     }
 }
