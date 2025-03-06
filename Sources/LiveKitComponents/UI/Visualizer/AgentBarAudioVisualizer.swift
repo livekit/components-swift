@@ -165,21 +165,21 @@ extension AgentBarAudioVisualizer {
 
         func duration(agentState: AgentState) -> TimeInterval {
             switch agentState {
-            case .connecting, .initializing: 2 / Double(barCount)
-            case .listening: 0.5
-            case .thinking: 0.15
-            case .speaking: veryLongDuration
-            default: veryLongDuration
+            case .connecting, .initializing: return 2 / Double(barCount)
+            case .listening: return 0.5
+            case .thinking: return 0.15
+            case .speaking: return veryLongDuration
+            default: return veryLongDuration
             }
         }
 
         func highlightingSequence(agentState: AgentState) -> [HighlightedBars] {
             switch agentState {
-            case .connecting, .initializing: (0 ..< barCount).map { HighlightedBars([$0, barCount - 1 - $0]) }
-            case .thinking: Array((0 ..< barCount) + (0 ..< barCount).reversed()).map { HighlightedBars([$0]) }
-            case .listening: barCount % 2 == 0 ? [[(barCount / 2) - 1, barCount / 2], []] : [[barCount / 2], []]
-            case .speaking: [HighlightedBars(0 ..< barCount)]
-            default: [[]]
+            case .connecting, .initializing: return (0 ..< barCount).map { HighlightedBars([$0, barCount - 1 - $0]) }
+            case .thinking: return Array((0 ..< barCount) + (0 ..< barCount).reversed()).map { HighlightedBars([$0]) }
+            case .listening: return barCount % 2 == 0 ? [[(barCount / 2) - 1, barCount / 2], []] : [[barCount / 2], []]
+            case .speaking: return [HighlightedBars(0 ..< barCount)]
+            default: return [[]]
             }
         }
     }
