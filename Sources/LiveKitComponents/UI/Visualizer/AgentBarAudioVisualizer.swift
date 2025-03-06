@@ -75,7 +75,7 @@ public struct AgentBarAudioVisualizer: View {
     public let barMinOpacity: Double
     public let isCentered: Bool
 
-    public let agentState: AgentState
+    private let agentState: AgentState
 
     @StateObject private var audioProcessor: AudioProcessor
 
@@ -120,15 +120,16 @@ public struct AgentBarAudioVisualizer: View {
                     animationTask = Task {
                         while !Task.isCancelled {
                             try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
-                            withAnimation { animationPhase += 1 }
+                            withAnimation(.easeInOut) { animationPhase += 1 }
                         }
                     }
                 }
                 .onDisappear {
                     animationTask?.cancel()
                 }
+                .animation(.easeOut, value: agentState)
                 .onChange(of: agentState) { _ in
-                    withAnimation { animationPhase = 0 }
+                    animationPhase = 0
                 }
         }
     }
