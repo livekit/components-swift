@@ -156,50 +156,31 @@ extension AgentBarAudioVisualizer {
     private struct PhaseAnimationProperties {
         typealias HighlightedBars = Set<Int>
 
-        private let durations: [AgentState: TimeInterval]
-        private let sequences: [AgentState: [HighlightedBars]]
-
+        private let barCount: Int
         private let veryLongDuration: TimeInterval = 1000
 
         init(barCount: Int) {
-            durations = [
-                .connecting: 2 / Double(barCount),
-                .initializing: 2 / Double(barCount),
-                .listening: 0.5,
-                .thinking: 0.15,
-                .speaking: veryLongDuration,
-            ]
-            sequences = [
-                .connecting: Self.generateConnectingSequence(barCount: barCount),
-                .initializing: Self.generateConnectingSequence(barCount: barCount),
-                .listening: Self.generateListeningSequence(barCount: barCount),
-                .thinking: Self.generateThinkingSequence(barCount: barCount),
-                .speaking: Self.generateSpeakingSequence(barCount: barCount),
-            ]
+            self.barCount = barCount
         }
 
         func duration(agentState: AgentState) -> TimeInterval {
-            durations[agentState] ?? veryLongDuration
+            switch agentState {
+            case .connecting, .initializing: 2 / Double(barCount)
+            case .listening: 0.5
+            case .thinking: 0.15
+            case .speaking: veryLongDuration
+            default: veryLongDuration
+            }
         }
 
         func highlightingSequence(agentState: AgentState) -> [HighlightedBars] {
-            sequences[agentState] ?? [[]]
-        }
-
-        private static func generateConnectingSequence(barCount: Int) -> [HighlightedBars] {
-            (0 ..< barCount).map { HighlightedBars([$0, barCount - 1 - $0]) }
-        }
-
-        private static func generateThinkingSequence(barCount: Int) -> [HighlightedBars] {
-            Array((0 ..< barCount) + (0 ..< barCount).reversed()).map { HighlightedBars([$0]) }
-        }
-
-        private static func generateListeningSequence(barCount: Int) -> [HighlightedBars] {
-            barCount % 2 == 0 ? [[(barCount / 2) - 1, barCount / 2], []] : [[barCount / 2], []]
-        }
-
-        private static func generateSpeakingSequence(barCount: Int) -> [HighlightedBars] {
-            [HighlightedBars(0 ..< barCount)]
+            switch agentState {
+            case .connecting, .initializing: (0 ..< barCount).map { HighlightedBars([$0, barCount - 1 - $0]) }
+            case .thinking: Array((0 ..< barCount) + (0 ..< barCount).reversed()).map { HighlightedBars([$0]) }
+            case .listening: barCount % 2 == 0 ? [[(barCount / 2) - 1, barCount / 2], []] : [[barCount / 2], []]
+            case .speaking: [HighlightedBars(0 ..< barCount)]
+            default: [[]]
+            }
         }
     }
 }
