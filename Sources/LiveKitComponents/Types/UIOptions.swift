@@ -37,6 +37,13 @@ open class UIOptions: ObservableObject {
 
     public init() {}
 
+    /// Placeholder view when no track is enabled.
+    open func noTrackView() -> AnyView {
+        AnyView(
+            EmptyView()
+        )
+    }
+
     /// Placeholder view when the video is disabled or not available.
     open func videoDisabledView(geometry: GeometryProxy) -> AnyView {
         AnyView(

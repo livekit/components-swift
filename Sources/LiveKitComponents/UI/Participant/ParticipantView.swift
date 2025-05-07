@@ -34,12 +34,16 @@ public struct ParticipantView: View {
 
             if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
                 VideoTrackView(trackReference: cameraReference)
-            } else if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted, let audioTrack = microphoneTrack.track as? AudioTrack {
+            } else if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted,
+                      let audioTrack = microphoneTrack.track as? AudioTrack
+            {
                 if _participant.isAgent {
                     AgentBarAudioVisualizer(audioTrack: audioTrack, agentState: _participant.agentState)
                 } else {
                     BarAudioVisualizer(audioTrack: audioTrack)
                 }
+            } else {
+                _ui.noTrackView()
             }
 
             if _showInformation {
@@ -50,5 +54,6 @@ public struct ParticipantView: View {
                     .padding()
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
