@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 #if compiler(>=6.0)
-extension EnvironmentValues {
+public extension EnvironmentValues {
     @Entry var liveKitUIOptions: UIOptions = .init()
 }
 #else
