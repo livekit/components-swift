@@ -17,7 +17,7 @@
 import AVFoundation
 import LiveKit
 
-public class AudioProcessor: ObservableObject, AudioRenderer {
+public class AudioProcessor: ObservableObject, @unchecked Sendable, AudioRenderer {
     public let isCentered: Bool
     public let smoothingFactor: Float
 
