@@ -28,28 +28,26 @@ public struct ParticipantView: View {
     }
 
     public var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .topLeading) {
-                let cameraReference = TrackReference(participant: _participant, source: .camera)
-                let microphoneReference = TrackReference(participant: _participant, source: .microphone)
+        ZStack(alignment: .topLeading) {
+            let cameraReference = TrackReference(participant: _participant, source: .camera)
+            let microphoneReference = TrackReference(participant: _participant, source: .microphone)
 
-                if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
-                    VideoTrackView(trackReference: cameraReference)
+            if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
+                VideoTrackView(trackReference: cameraReference)
+            } else if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted, let audioTrack = microphoneTrack.track as? AudioTrack {
+                if _participant.isAgent {
+                    AgentBarAudioVisualizer(audioTrack: audioTrack, agentState: _participant.agentState)
                 } else {
-                    if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted, let audioTrack = microphoneTrack.track as? AudioTrack {
-                        BarAudioVisualizer(audioTrack: audioTrack)
-                    } else {
-                        _ui.videoDisabledView(geometry: geometry)
-                    }
+                    BarAudioVisualizer(audioTrack: audioTrack)
                 }
+            }
 
-                if _showInformation {
-                    ParticipantInformationView()
-                        .padding(5)
-                        .background(Color.black.opacity(0.5))
-                        .cornerRadius(7)
-                        .padding()
-                }
+            if _showInformation {
+                ParticipantInformationView()
+                    .padding(5)
+                    .background(Color.black.opacity(0.5))
+                    .cornerRadius(7)
+                    .padding()
             }
         }
     }
