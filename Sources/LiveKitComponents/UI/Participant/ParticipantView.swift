@@ -54,6 +54,7 @@ public struct ParticipantView: View {
                     .padding()
             }
         }
+        .animation(.easeOut, value: _participant.trackPublications)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
