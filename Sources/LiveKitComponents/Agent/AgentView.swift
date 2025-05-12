@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-@_exported import LiveKit
-@_exported import SwiftUI
+import LiveKit
+import SwiftUI
 
-public let liveKitComponentsVersion = "0.1.2"
+public struct AgentView: View {
+    private let _showInformation: Bool
 
-public typealias ComponentBuilder<Content: View> = () -> Content
-public typealias ParticipantComponentBuilder<Content: View> = (_: Participant) -> Content
-public typealias TrackReferenceComponentBuilder<Content: View> = (_: TrackReference) -> Content
-public typealias ParticipantLayoutBuilder<Content: View> = (_ participant: Participant,
-                                                            _ geometry: GeometryProxy) -> Content
+    @EnvironmentObject private var _participant: Participant
+
+    public init(showInformation: Bool = true) {
+        _showInformation = showInformation
+    }
+
+    public var body: some View {
+        ParticipantView(showInformation: _showInformation)
+            .environmentObject(_participant.avatarWorker ?? _participant)
+    }
+}
