@@ -29,8 +29,8 @@ public struct ParticipantView: View {
 
     public var body: some View {
         ZStack(alignment: .topLeading) {
-            let cameraReference = TrackReference(participant: _participant, source: .camera)
-            let microphoneReference = TrackReference(participant: _participant, source: .microphone)
+            let cameraReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .camera)
+            let microphoneReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .microphone)
 
             if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
                 VideoTrackView(trackReference: cameraReference)
