@@ -31,7 +31,7 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
     public init(track: AudioTrack?,
                 bandCount: Int,
                 isCentered: Bool = true,
-                smoothingFactor: Float = 0.3)
+                smoothingFactor: Float = 0.25)
     {
         self.isCentered = isCentered
         self.smoothingFactor = smoothingFactor
