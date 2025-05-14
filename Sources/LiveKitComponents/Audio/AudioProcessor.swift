@@ -55,7 +55,7 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
             // If centering is enabled, rearrange the normalized bands
             if isCentered {
                 newBands.sort(by: >)
-                newBands = await Self.centerBands(newBands)
+                newBands = Self.centerBands(newBands)
             }
 
             await MainActor.run {
@@ -69,7 +69,7 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
     // MARK: - Private
 
     /// Centers the sorted bands by placing higher values in the middle.
-    @inline(__always) private static func centerBands(_ sortedBands: [Float]) -> [Float] {
+    @inline(__always) private nonisolated static func centerBands(_ sortedBands: [Float]) -> [Float] {
         var centeredBands = [Float](repeating: 0, count: sortedBands.count)
         var leftIndex = sortedBands.count / 2
         var rightIndex = leftIndex
@@ -90,7 +90,7 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
     }
 
     /// Applies an easing function to smooth the transition.
-    @inline(__always) private static func smoothTransition(from oldValue: Float, to newValue: Float, factor: Float) -> Float {
+    @inline(__always) private nonisolated static func smoothTransition(from oldValue: Float, to newValue: Float, factor: Float) -> Float {
         // Calculate the delta change between the old and new value
         let delta = newValue - oldValue
         // Apply an ease-in-out cubic easing curve
@@ -100,7 +100,7 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
     }
 
     /// Easing function: ease-in-out cubic
-    @inline(__always) private static func easeInOutCubic(t: Float) -> Float {
+    @inline(__always) private nonisolated static func easeInOutCubic(t: Float) -> Float {
         t < 0.5 ? 4 * t * t * t : 1 - pow(-2 * t + 2, 3) / 2
     }
 }
