@@ -1,5 +1,5 @@
-// swift-tools-version:5.9
-// (Xcode15.0+)
+// swift-tools-version:6.0
+// (Xcode16.0+)
 
 import PackageDescription
 
@@ -34,5 +34,9 @@ let package = Package(
             name: "LiveKitComponentsTests",
             dependencies: ["LiveKitComponents"]
         ),
+    ],
+    swiftLanguageModes: [
+        .v5, // opt-out from dynamic actor isolation checks
+        .v6,
     ]
 )

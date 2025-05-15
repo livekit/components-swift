@@ -28,29 +28,29 @@ public struct ParticipantView: View {
     }
 
     public var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .topLeading) {
-                let cameraReference = TrackReference(participant: _participant, source: .camera)
-                let microphoneReference = TrackReference(participant: _participant, source: .microphone)
+        ZStack(alignment: .topLeading) {
+            let cameraReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .camera)
+            let microphoneReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .microphone)
 
-                if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
-                    VideoTrackView(trackReference: cameraReference)
-                } else {
-                    if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted, let audioTrack = microphoneTrack.track as? AudioTrack {
-                        BarAudioVisualizer(audioTrack: audioTrack)
-                    } else {
-                        _ui.videoDisabledView(geometry: geometry)
-                    }
-                }
+            if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
+                VideoTrackView(trackReference: cameraReference)
+            } else if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted,
+                      let audioTrack = microphoneTrack.track as? AudioTrack
+            {
+                BarAudioVisualizer(audioTrack: audioTrack, agentState: _participant.agentState).id(_participant.agentState)
+            } else {
+                _ui.noTrackView()
+            }
 
-                if _showInformation {
-                    ParticipantInformationView()
-                        .padding(5)
-                        .background(Color.black.opacity(0.5))
-                        .cornerRadius(7)
-                        .padding()
-                }
+            if _showInformation {
+                ParticipantInformationView()
+                    .padding(5)
+                    .background(Color.black.opacity(0.5))
+                    .cornerRadius(7)
+                    .padding()
             }
         }
+        .animation(.easeOut, value: _participant.trackPublications)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

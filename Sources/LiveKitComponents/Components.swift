@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import LiveKit
-import SwiftUI
+@_exported import LiveKit
+@_exported import SwiftUI
 
 public let liveKitComponentsVersion = "0.1.2"
 

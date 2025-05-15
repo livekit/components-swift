@@ -18,7 +18,7 @@ import LiveKit
 import SwiftUI
 
 /// Subclass to customize default components UI.
-open class UIOptions: ObservableObject {
+open class UIOptions {
     // MARK: - Types
 
     public enum TextFieldType {
@@ -36,6 +36,13 @@ open class UIOptions: ObservableObject {
     open var participantViewSpacing: CGFloat { 8 }
 
     public init() {}
+
+    /// Placeholder view when no track is enabled.
+    open func noTrackView() -> AnyView {
+        AnyView(
+            EmptyView()
+        )
+    }
 
     /// Placeholder view when the video is disabled or not available.
     open func videoDisabledView(geometry: GeometryProxy) -> AnyView {
