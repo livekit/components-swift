@@ -58,7 +58,7 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
                 newBands = Self.centerBands(newBands)
             }
 
-            await MainActor.run {
+            await MainActor.run { [newBands] in
                 bands = zip(bands, newBands).map { old, new in
                     Self.smoothTransition(from: old, to: new, factor: smoothingFactor)
                 }
