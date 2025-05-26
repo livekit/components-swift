@@ -29,19 +29,16 @@ public struct ParticipantView: View {
 
     public var body: some View {
         ZStack(alignment: .topLeading) {
-            let cameraReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .camera)
+//            let cameraReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .camera)
             let microphoneReference = TrackReference(participant: _participant.avatarWorker ?? _participant, source: .microphone)
 
-            if let cameraTrack = cameraReference.resolve(), !cameraTrack.isMuted {
-                VideoTrackView(trackReference: cameraReference)
+            if let cameraTrack = _participant.firstCameraVideoTrack {
+                SwiftUIVideoView(cameraTrack)
             } else if let microphoneTrack = microphoneReference.resolve(), !microphoneTrack.isMuted,
                       let audioTrack = microphoneTrack.track as? AudioTrack
             {
                 BarAudioVisualizer(audioTrack: audioTrack, agentState: _participant.agentState).id(_participant.agentState)
-            } else {
-                _ui.noTrackView()
             }
-
             if _showInformation {
                 ParticipantInformationView()
                     .padding(5)
@@ -51,6 +48,7 @@ public struct ParticipantView: View {
             }
         }
         .animation(.easeOut, value: _participant.trackPublications)
+        .transition(.identity)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
