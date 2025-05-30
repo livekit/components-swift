@@ -139,14 +139,14 @@ public struct BarAudioVisualizer: View {
         let barMinHeight = (geometry.size.width - geometry.size.width * barSpacingFactor * CGFloat(barCount + 2)) / CGFloat(barCount)
         HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
             ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
-                VStack {
-                    Spacer()
-                    RoundedRectangle(cornerRadius: barMinHeight)
-                        .fill(barColor)
-                        .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
-                        .frame(height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight)
-                    Spacer()
-                }
+                RoundedRectangle(cornerRadius: barMinHeight)
+                    .fill(barColor)
+                    .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
+                    .frame(
+                        height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight,
+                        alignment: .center
+                    )
+                    .frame(maxHeight: .infinity, alignment: .center)
             }
         }
         .padding(geometry.size.width * barSpacingFactor)
