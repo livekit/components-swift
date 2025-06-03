@@ -136,20 +136,25 @@ public struct BarAudioVisualizer: View {
 
     @ViewBuilder
     private func bars(geometry: GeometryProxy, highlighted: PhaseAnimationProperties.HighlightedBars) -> some View {
-        let barMinHeight = (geometry.size.width - geometry.size.width * barSpacingFactor * CGFloat(barCount + 2)) / CGFloat(barCount)
+        let totalSpacing = geometry.size.width * barSpacingFactor * CGFloat(barCount + 1)
+        let availableWidth = geometry.size.width - totalSpacing
+        let barWidth = availableWidth / CGFloat(barCount)
+        let barMinHeight = barWidth // Use bar width as minimum height for square proportions
+
         HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
             ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
                 RoundedRectangle(cornerRadius: barMinHeight)
                     .fill(barColor)
                     .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
                     .frame(
+                        width: barWidth,
                         height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight,
                         alignment: .center
                     )
                     .frame(maxHeight: .infinity, alignment: .center)
             }
         }
-        .padding(geometry.size.width * barSpacingFactor)
+        .frame(width: geometry.size.width)
     }
 }
 
