@@ -112,25 +112,19 @@ public struct BarAudioVisualizer: View {
         GeometryReader { geometry in
             let highlightingSequence = animationProperties.highlightingSequence(agentState: agentState)
             let highlighted = highlightingSequence[animationPhase % highlightingSequence.count]
-            let duration = animationProperties.duration(agentState: agentState)
 
             bars(geometry: geometry, highlighted: highlighted)
                 .onAppear {
-                    animationTask?.cancel()
-                    animationTask = Task {
-                        while !Task.isCancelled {
-                            try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
-                            withAnimation(.easeInOut) { animationPhase += 1 }
-                        }
-                    }
+                    startAnimation(duration: animationProperties.duration(agentState: agentState))
                 }
                 .onDisappear {
-                    animationTask?.cancel()
+                    stopAnimation()
                 }
-                .animation(.easeOut, value: agentState)
-                .onChange(of: agentState) { _ in
-                    animationPhase = 0
+                .onChange(of: agentState) { newState in
+                    startAnimation(duration: animationProperties.duration(agentState: newState))
                 }
+                .animation(.easeInOut, value: animationPhase)
+                .animation(.easeInOut(duration: 0.3), value: agentState)
         }
     }
 
@@ -155,6 +149,21 @@ public struct BarAudioVisualizer: View {
             }
         }
         .frame(width: geometry.size.width)
+    }
+
+    private func startAnimation(duration: TimeInterval) {
+        animationTask?.cancel()
+        animationPhase = 0
+        animationTask = Task {
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
+                animationPhase += 1
+            }
+        }
+    }
+
+    private func stopAnimation() {
+        animationTask?.cancel()
     }
 }
 
