@@ -17,7 +17,7 @@
 @_exported import LiveKit
 @_exported import SwiftUI
 
-public let liveKitComponentsVersion = "0.1.3"
+public let liveKitComponentsVersion = "0.1.4"
 
 public typealias ComponentBuilder<Content: View> = () -> Content
 public typealias ParticipantComponentBuilder<Content: View> = (_: Participant) -> Content
