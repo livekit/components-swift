@@ -112,44 +112,58 @@ public struct BarAudioVisualizer: View {
         GeometryReader { geometry in
             let highlightingSequence = animationProperties.highlightingSequence(agentState: agentState)
             let highlighted = highlightingSequence[animationPhase % highlightingSequence.count]
-            let duration = animationProperties.duration(agentState: agentState)
 
             bars(geometry: geometry, highlighted: highlighted)
                 .onAppear {
-                    animationTask?.cancel()
-                    animationTask = Task {
-                        while !Task.isCancelled {
-                            try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
-                            withAnimation(.easeInOut) { animationPhase += 1 }
-                        }
-                    }
+                    startAnimation(duration: animationProperties.duration(agentState: agentState))
                 }
                 .onDisappear {
-                    animationTask?.cancel()
+                    stopAnimation()
                 }
-                .animation(.easeOut, value: agentState)
-                .onChange(of: agentState) { _ in
-                    animationPhase = 0
+                .onChange(of: agentState) { newState in
+                    startAnimation(duration: animationProperties.duration(agentState: newState))
                 }
+                .animation(.easeInOut, value: animationPhase)
+                .animation(.easeInOut(duration: 0.3), value: agentState)
         }
     }
 
     @ViewBuilder
     private func bars(geometry: GeometryProxy, highlighted: PhaseAnimationProperties.HighlightedBars) -> some View {
-        let barMinHeight = (geometry.size.width - geometry.size.width * barSpacingFactor * CGFloat(barCount + 2)) / CGFloat(barCount)
+        let totalSpacing = geometry.size.width * barSpacingFactor * CGFloat(barCount + 1)
+        let availableWidth = geometry.size.width - totalSpacing
+        let barWidth = availableWidth / CGFloat(barCount)
+        let barMinHeight = barWidth // Use bar width as minimum height for square proportions
+
         HStack(alignment: .center, spacing: geometry.size.width * barSpacingFactor) {
             ForEach(0 ..< audioProcessor.bands.count, id: \.self) { index in
-                VStack {
-                    Spacer()
-                    RoundedRectangle(cornerRadius: barMinHeight)
-                        .fill(barColor)
-                        .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
-                        .frame(height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight)
-                    Spacer()
-                }
+                RoundedRectangle(cornerRadius: barMinHeight)
+                    .fill(barColor)
+                    .opacity(highlighted.contains(index) ? 1 : barMinOpacity)
+                    .frame(
+                        width: barWidth,
+                        height: (geometry.size.height - barMinHeight) * CGFloat(audioProcessor.bands[index]) + barMinHeight,
+                        alignment: .center
+                    )
+                    .frame(maxHeight: .infinity, alignment: .center)
             }
         }
-        .padding(geometry.size.width * barSpacingFactor)
+        .frame(width: geometry.size.width)
+    }
+
+    private func startAnimation(duration: TimeInterval) {
+        animationTask?.cancel()
+        animationPhase = 0
+        animationTask = Task {
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: UInt64(duration * Double(NSEC_PER_SEC)))
+                animationPhase += 1
+            }
+        }
+    }
+
+    private func stopAnimation() {
+        animationTask?.cancel()
     }
 }
 
