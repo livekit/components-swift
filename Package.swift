@@ -34,5 +34,8 @@ let package = Package(
             name: "LiveKitComponentsTests",
             dependencies: ["LiveKitComponents"]
         ),
+    ],
+    swiftLanguageVersions: [
+        .v5,
     ]
 )
