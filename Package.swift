@@ -9,7 +9,6 @@ let package = Package(
         .iOS(.v14),
         .macOS(.v11),
         .macCatalyst(.v14),
-        .visionOS(.v1),
         .tvOS(.v17),
     ],
     products: [
@@ -19,7 +18,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/livekit/client-sdk-swift.git", from: "2.6.0"),
+        .package(url: "https://github.com/livekit/client-sdk-swift.git", from: "2.7.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.4.3"),
     ],
     targets: [
