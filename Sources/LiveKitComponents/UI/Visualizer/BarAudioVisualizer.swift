@@ -108,6 +108,17 @@ public struct BarAudioVisualizer: View {
         animationProperties = PhaseAnimationProperties(barCount: barCount)
     }
 
+    public init(agent: Agent?,
+                barColor: Color = .primary,
+                barCount: Int = 5,
+                barCornerRadius: CGFloat = 100,
+                barSpacingFactor: CGFloat = 0.015,
+                barMinOpacity: CGFloat = 0.16,
+                isCentered: Bool = true)
+    {
+        self.init(audioTrack: agent?.audioTrack, agentState: agent?.state ?? .listening, barColor: barColor, barCount: barCount, barCornerRadius: barCornerRadius, barSpacingFactor: barSpacingFactor, barMinOpacity: barMinOpacity, isCentered: isCentered)
+    }
+
     public var body: some View {
         GeometryReader { geometry in
             let highlightingSequence = animationProperties.highlightingSequence(agentState: agentState)
