@@ -20,7 +20,7 @@ import SwiftUI
 public struct ChatScrollView<Content: View>: View {
     public typealias MessageBuilder = (ReceivedMessage) -> Content
 
-    @LKConversation private var conversation
+    @LiveKitConversation private var conversation
     @ViewBuilder private let messageBuilder: MessageBuilder
 
     public init(messageBuilder: @escaping MessageBuilder) {
