@@ -20,7 +20,7 @@ import SwiftUI
 public struct ChatScrollView<Content: View>: View {
     public typealias MessageBuilder = (ReceivedMessage) -> Content
 
-    @LiveKitConversation private var conversation
+    @LiveKitSession private var session
     @ViewBuilder private let messageBuilder: MessageBuilder
 
     public init(messageBuilder: @escaping MessageBuilder) {
@@ -31,18 +31,18 @@ public struct ChatScrollView<Content: View>: View {
         ScrollViewReader { scrollView in
             ScrollView {
                 LazyVStack {
-                    ForEach(conversation.messages.values.reversed()) { message in
+                    ForEach(session.messages.values.reversed()) { message in
                         messageBuilder(message)
                             .upsideDown()
                             .id(message.id)
                     }
                 }
             }
-            .onChange(of: conversation.messages.count) { _ in
-                scrollView.scrollTo(conversation.messages.keys.last)
+            .onChange(of: session.messages.count) { _ in
+                scrollView.scrollTo(session.messages.keys.last)
             }
             .upsideDown()
-            .animation(.default, value: conversation.messages)
+            .animation(.default, value: session.messages)
         }
     }
 }
