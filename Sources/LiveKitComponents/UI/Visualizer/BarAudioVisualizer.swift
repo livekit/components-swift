@@ -108,7 +108,7 @@ public struct BarAudioVisualizer: View {
         animationProperties = PhaseAnimationProperties(barCount: barCount)
     }
 
-    public init(agent: Agent?,
+    public init(agent: Agent,
                 barColor: Color = .primary,
                 barCount: Int = 5,
                 barCornerRadius: CGFloat = 100,
@@ -116,7 +116,7 @@ public struct BarAudioVisualizer: View {
                 barMinOpacity: CGFloat = 0.16,
                 isCentered: Bool = true)
     {
-        self.init(audioTrack: agent?.audioTrack, agentState: agent?.agentState ?? .listening, barColor: barColor, barCount: barCount, barCornerRadius: barCornerRadius, barSpacingFactor: barSpacingFactor, barMinOpacity: barMinOpacity, isCentered: isCentered)
+        self.init(audioTrack: agent.audioTrack, agentState: agent.agentState ?? .listening, barColor: barColor, barCount: barCount, barCornerRadius: barCornerRadius, barSpacingFactor: barSpacingFactor, barMinOpacity: barMinOpacity, isCentered: isCentered)
     }
 
     public var body: some View {
