@@ -19,11 +19,13 @@ import SwiftUI
 /// A drop-in replacement `Button` that executes an async action and shows a busy label when in progress.
 ///
 /// - Parameters:
-///   - action: The async action to execute.
+///   - action: The async action to execute (can be throwing).
 ///   - label: The label to show when not busy.
 ///   - busyLabel: The label to show when busy. Defaults to an empty view.
+///   - onError: Optional closure to handle errors thrown by the action.
 public struct AsyncButton<Label: View, BusyLabel: View>: View {
-    private let action: () async -> Void
+    private let action: () async throws -> Void
+    private let onError: ((Error) -> Void)?
 
     @ViewBuilder private let label: Label
     @ViewBuilder private let busyLabel: BusyLabel
@@ -31,11 +33,13 @@ public struct AsyncButton<Label: View, BusyLabel: View>: View {
     @State private var isBusy = false
 
     public init(
-        action: @escaping () async -> Void,
+        action: @escaping () async throws -> Void,
         @ViewBuilder label: () -> Label,
-        @ViewBuilder busyLabel: () -> BusyLabel = EmptyView.init
+        @ViewBuilder busyLabel: () -> BusyLabel = EmptyView.init,
+        onError: ((Error) -> Void)? = nil
     ) {
         self.action = action
+        self.onError = onError
         self.label = label()
         self.busyLabel = busyLabel()
     }
@@ -44,7 +48,11 @@ public struct AsyncButton<Label: View, BusyLabel: View>: View {
         Button {
             isBusy = true
             Task {
-                await action()
+                do {
+                    try await action()
+                } catch {
+                    onError?(error)
+                }
                 isBusy = false
             }
         } label: {
