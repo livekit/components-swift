@@ -42,7 +42,6 @@ public struct ChatScrollView<Content: View>: View {
                 scrollView.scrollTo(session.messages.last?.id)
             }
             .upsideDown()
-            .animation(.default, value: session.messages)
         }
     }
 }
