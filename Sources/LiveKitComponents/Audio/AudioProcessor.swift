@@ -48,18 +48,23 @@ public final class AudioProcessor: ObservableObject, AudioRenderer {
     }
 
     public nonisolated func render(pcmBuffer: AVAudioPCMBuffer) {
-        Task {
-            let newBands = await processor.process(pcmBuffer: pcmBuffer)
-            guard var newBands else { return }
+        let processor = self.processor
+        let isCentered = self.isCentered
+        let smoothingFactor = self.smoothingFactor
 
-            // If centering is enabled, rearrange the normalized bands
+        Task.detached { [weak self] in
+            guard let self else { return }
+
+            let processed = await processor.process(pcmBuffer: pcmBuffer)
+            guard var newBands = processed else { return }
+
             if isCentered {
                 newBands.sort(by: >)
                 newBands = Self.centerBands(newBands)
             }
 
-            await MainActor.run { [newBands] in
-                bands = zip(bands, newBands).map { old, new in
+            await MainActor.run {
+                self.bands = zip(self.bands, newBands).map { old, new in
                     Self.smoothTransition(from: old, to: new, factor: smoothingFactor)
                 }
             }
