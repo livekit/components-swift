@@ -1,5 +1,5 @@
-// swift-tools-version:6.0
-// (Xcode16.0+)
+// swift-tools-version:6.2
+// (Xcode26.0+)
 
 import PackageDescription
 
@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v14),
         .macOS(.v11),
         .macCatalyst(.v14),
-        .visionOS(.v2),
+        .visionOS(.v26),
         .tvOS(.v17),
     ],
     products: [
@@ -19,7 +19,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/livekit/client-sdk-swift.git", from: "2.10.0"),
+        .package(url: "https://github.com/livekit/client-sdk-swift.git", from: "2.13.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.4.3"),
     ],
     targets: [
